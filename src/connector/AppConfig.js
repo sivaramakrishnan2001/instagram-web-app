@@ -16,7 +16,7 @@ export const Me = {
         "React.js", "Javascript", "Node.js", "MongoDB", "Express.js", "HTML5", "CSS3", "SCSS", "Git"
     ]
 };
-console.log("🤞", Me);
+// console.log("🤞", Me);
 
 
 export const FirebaseConfig = {
@@ -32,7 +32,6 @@ export const FirebaseConfig = {
 
 export const LocalStorageKeys = {
     user: localStorage.getItem("user"),
-    test: JSON.parse(localStorage.getItem("user")),
     token: localStorage.getItem("token")
 };
 
@@ -56,7 +55,8 @@ export const ComponentsKeys = {
     PROFILE: "profile",
     MORE: "more",
     USERPROFILE: "userprofile",
-    STORYS: "storys"
+    STORYS: "storys",
+    POSTS:"posts"
 };
 
 export const Components = [

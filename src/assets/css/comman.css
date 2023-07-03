@@ -91,3 +91,37 @@ button .loading {
 
 /*=================================================================== */
 /* card */
+
+
+.chat-box {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    border: 1px solid gainsboro;
+    border-radius: 4px;
+}
+
+.chat-box>.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chat-box>.logo>img {
+    height: 40px;
+    width: 40px;
+    object-fit: contain;
+    border-radius: 50%;
+}
+
+
+.chat-box>input {
+    width: 80%;
+    border: 1px solid ghostwhite;
+}
+
+.chat-box>.send,
+.chat-box>.send>svg{
+    height: 25px;
+    width: 25px;
+}

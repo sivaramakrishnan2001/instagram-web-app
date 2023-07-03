@@ -51,6 +51,6 @@ export const APICALL = async (URL, Method, Data) => {
         return response.json();
 
     } catch (error) {
-        alert(error)
+        console.log("error",error);
     }
 }

@@ -1,9 +1,16 @@
-import React from 'react'
-import { Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react'
+import { Navigate, useLocation, useParams } from 'react-router-dom';
 import { AppScreensKeys, LocalStorageKeys } from '../../connector/AppConfig';
 
 export const SecureScreen = ({ children }) => {
-  if (!LocalStorageKeys.token) {
+  const param = useParams();
+  const location = useLocation();
+
+  useEffect(() => {
+    console.log("SecureScreen param ", param);
+  }, []);
+
+  if (!LocalStorageKeys.token && !location.state) {
     // not logged in so redirect to login page with the return url
     return <Navigate to={AppScreensKeys.Login} />
   }

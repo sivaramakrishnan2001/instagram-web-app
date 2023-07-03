@@ -11,10 +11,12 @@ export const Search = () => {
     const navigate = useNavigate();
     const [users, setUsers] = useState([]);
     const [search, setSearch] = useState("");
+    const [myid, setmyid] = useState("");
 
     // ==============================================================
 
     useEffect(() => {
+        setmyid(JSON.parse(localStorage.getItem("user"))?._id);
         getUsers();
 
     }, []);
@@ -61,11 +63,20 @@ export const Search = () => {
                             <div className="row" key={key}>
                                 <div className="logo" onClick={(e) => {
                                     e.stopPropagation();
-                                    navigate(AppScreensKeys.Home + "/" + row._id, {
-                                        state: {
-                                            userId: row._id
-                                        }
-                                    });
+                                    if (myid === row._id) {
+                                        navigate(AppScreensKeys.Home + "/" + ComponentsKeys.PROFILE + "/" + row._id, {
+                                            state: {
+                                                userId: row._id
+                                            }
+                                        });
+                                    } else {
+                                        navigate(AppScreensKeys.Home + "/" + ComponentsKeys.USERPROFILE + "/" + row._id, {
+                                            state: {
+                                                userId: row._id
+                                            }
+                                        });
+                                    }
+
                                 }}>
                                     <img src={row.profile} alt="profile" />
                                 </div>

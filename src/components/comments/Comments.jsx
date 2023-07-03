@@ -1,57 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import { UpdateRequest } from '../../connector/APIsCommunicator';
-import { LocalStorageKeys } from '../../connector/AppConfig';
+import React, { useState } from 'react';
+
+
 
 export const Comments = (props) => {
 
     const [message, setMessage] = useState("");
 
-    useEffect(() => {
-        console.log("console.log(LocalStorageKeys.user);",);
-    }, [])
-
+    // ==================================================================
 
     const onSend = () => {
-
-        var obj = {
-            userId: JSON.parse(localStorage.getItem("user"))?._id,
-            postId: props.row._id,
-            message: message
+        if (message) {
+            props.onChange(message);
         }
-        console.log(obj, "obj");
-        UpdateRequest(
-            "/post/sendMessage",
-            obj,
-            (resObj) => {
-                setMessage("");
-            }, (err) => {
-                setMessage("");
-            }
-        );
     }
 
+    // ==================================================================
+
     return (
-        <div className='comments'>
-            {props.row.comments?.map((row, key) => {
-                return (
-                    <div className='' key={key}>
-                        <div className="user">
-                            <div className="logo">
-                                <img src={row.profile} alt="profile" />
-                            </div>
-                            <div className="message">
-                                <div className="id">{row.name}</div>
-                                <div className="text">{row.text}</div>
-                            </div>
-                        </div>
-                    </div>
-                )
-            })}
-            <div className="chat">
-                <div className="logo"></div>
-                <input type="text" onChange={(e) => setMessage(e.target.value)} />
-                <div className="send" onClick={() => onSend()}>Post</div>
+        <div className="chat-box">
+            <div className="logo">
+                <img src={props.profile} />
             </div>
+            <input type="text" placeholder='Add a comment' onChange={(e) => setMessage(e.target.value)} />
+            <div className="send" onClick={() => onSend()}>
+                <svg focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="SendIcon"><path d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
+            </div>
+
         </div>
     )
 }

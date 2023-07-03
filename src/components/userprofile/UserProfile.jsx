@@ -34,7 +34,7 @@ export const UserProfile = (props) => {
     }, [params.userId]);
 
     useEffect(() => {
-        console.log("paramid",paramid);
+        console.log("paramid-----",paramid);
         if (paramid) {
             onGetUser();
         }
@@ -310,11 +310,11 @@ export const UserProfile = (props) => {
                                         <div className="post-header">
                                             <div className="profile">
                                                 <div className="logo" onClick={() => {
-                                                    navigate(AppScreensKeys.Home + "/" + row.postedBy._id, {
-                                                        state: {
-                                                            userId: row.postedBy._id
-                                                        }
-                                                    });
+                                                    // navigate(AppScreensKeys.Home + "/" + row.postedBy._id, {
+                                                    //     state: {
+                                                    //         userId: row.postedBy._id
+                                                    //     }
+                                                    // });
                                                 }}>
                                                     <img src={row.postedBy?.profile} alt="profile" />
                                                 </div>

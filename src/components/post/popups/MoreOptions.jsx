@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { DeleteRequest } from '../../../connector/APIsCommunicator';
 import { APIsPath } from '../../../connector/APIsPath';
-import { LocalStorageKeys } from '../../../connector/AppConfig';
+import { AppScreensKeys, ComponentsKeys, LocalStorageKeys } from '../../../connector/AppConfig';
 import { deleteObject, getStorage, ref } from 'firebase/storage';
 
 export const MoreOptions = props => {
@@ -16,13 +16,15 @@ export const MoreOptions = props => {
         { id: "copylink", icon: "", name: "Copy link" },
         { id: "cancel", icon: "", name: "Cancel" },
     ]
+    const [isCopied, setIsCopied] = useState(false);
 
     // ==================================================================
 
     const onOptionClick = (row) => {
         switch (row.id) {
             case "delete": onDeletePostFileFireBaseStorage();
-                break;
+            case "copylink": handleCopy(row._id);
+
 
             default:
                 break;
@@ -30,19 +32,39 @@ export const MoreOptions = props => {
 
     }
 
+    const handleCopy = (id) => {
+        const textToCopy = AppScreensKeys.Home + "/" + ComponentsKeys.POSTS + "/" + props.selectedpost._id;
+        console.log("textToCopy",textToCopy);
+        // Create a temporary textarea element
+        const textarea = document.createElement('textarea');
+        textarea.value = textToCopy;
+        document.body.appendChild(textarea);
+
+        // Select and copy the text
+        textarea.select();
+        document.execCommand('copy');
+
+        // Clean up
+        document.body.removeChild(textarea);
+
+        setIsCopied(true);
+    };
+
     // ==================================================================
 
     const onDeletePostFileFireBaseStorage = () => {
         const storage = getStorage();
         // Create a reference to the file to delete
-        const desertRef = ref(storage, `images/${props.selectedpost.filename}`);
+
+        const desertRef = ref(storage, `${props.selectedpost.type === "video" ? 'videos' : 'images'}/${props.selectedpost.filename}`);
 
         // Delete the file
-        deleteObject(desertRef).then(() => {
+        deleteObject(desertRef).then((resObj) => {
             // File deleted successfully
+            console.log("resObj", resObj);
             onDeletePost();
         }).catch((error) => {
-            alert(" Uh-oh, an error occurred!")
+            console.log("error", error);
             // Uh-oh, an error occurred!
         });
     }
@@ -75,6 +97,7 @@ export const MoreOptions = props => {
     return (
         <div className='more-options-container'  >
             <div className="more-options" tabIndex={1} onClick={(e) => e.stopPropagation()}>
+            {isCopied && <span>Text copied to clipboard!</span>}
                 {options?.map((row, key) => {
                     return (
                         <div className="option" key={key} onClick={() => onOptionClick(row)}>

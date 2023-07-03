@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { AppScreensKeys, ComponentsKeys, SessionStorageKeys } from '../../connector/AppConfig';
+import { AppScreensKeys, ComponentsKeys, LocalStorageKeys, SessionStorageKeys } from '../../connector/AppConfig';
 import { Home } from '../home/Home';
 import { Create } from '../create/Create';
 import { Profile } from '../profile/Profile';
@@ -14,18 +14,46 @@ export const Content = props => {
 
 
     const navigate = useNavigate();
+    const params = useParams();
     const [selectedid, setSelectedId] = useState("");
+    const [reload, setReload] = useState(false);
 
     // ==============================================================
-
     useEffect(() => {
-
         if (sessionStorage.getItem(SessionStorageKeys.ActiveMenu)) {
             setSelectedId(sessionStorage.getItem(SessionStorageKeys.ActiveMenu));
         } else {
             if (props.selected && props.selected.id) {
                 setSelectedId(props.selected.id);
             }
+        }
+
+    }, []);
+
+    useEffect(() => {
+        console.log("params", params);
+        if (params.userId) {
+            if (JSON.parse(LocalStorageKeys.user)?._id === params.userId) {
+                setSelectedId(ComponentsKeys.PROFILE);
+            } else {
+                setSelectedId(ComponentsKeys.USERPROFILE);
+            }
+            setReload(ps => !ps);
+            // onSelected({ id: ComponentsKeys.USERPROFILE, title: "Profile", icon: "" });
+        }else{
+            if (sessionStorage.getItem("activemenu")) {
+                setSelectedId(sessionStorage.getItem("activemenu"));
+            }
+        }
+
+
+    }, [params.userId]);
+
+    useEffect(() => {
+        console.log("props.selected.id", props.selected.id);
+
+        if (props.selected && props.selected.id) {
+            setSelectedId(props.selected.id);
         }
 
     }, [props.selected]);
@@ -37,11 +65,7 @@ export const Content = props => {
         switch (id) {
             case ComponentsKeys.HOME: return <Home />
             case ComponentsKeys.CREATE: return <Create />;
-            case ComponentsKeys.PROFILE:
-                return (
-                    // <Profile />
-                    navigate(AppScreensKeys.Home + "/" + JSON.parse(localStorage.getItem("user"))?._id)
-                );
+            case ComponentsKeys.PROFILE: return <UserProfile />;
             case ComponentsKeys.MESSAGES: return <Message />;
             case ComponentsKeys.SEARCH: return <Search />;
             case ComponentsKeys.USERPROFILE: return <UserProfile />;

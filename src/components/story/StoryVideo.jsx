@@ -6,7 +6,7 @@ export const StoryVideo = (props) => {
 
     const [story, setStory] = useState([]);
     const [index, setIndex] = useState(0);
-    const [subindex, setSubIndex] = useState(1);
+    const [subindex, setSubIndex] = useState(0);
     const [selectedrow, setSelectedRow] = useState({});
 
     // ==============================================================
@@ -17,11 +17,13 @@ export const StoryVideo = (props) => {
     }, [props.story]);
 
     useEffect(() => {
-        if (props.selectedindex === 0) {
-            setIndex(1);
-        } else {
-            setIndex(props.selectedindex + 1);
-        }
+        // if (props.selectedindex === 0) {
+        //     setIndex(0);
+        // } else {
+        //     setIndex(props.selectedindex + 1);
+        // }
+
+        setIndex(props.selectedindex);
 
     }, [props.selectedindex]);
 
@@ -34,23 +36,29 @@ export const StoryVideo = (props) => {
     // ==============================================================
 
     const onGoBack = () => {
-        if (selectedrow.storys.length <= subindex) {
-            setSubIndex(subindex - 1);
-        } else if (selectedrow.storys.length === subindex) {
-            if (index !== 0) {
+        if (index !== 0) {
+            if (story[index].storys.length <= subindex + 1) {
+                console.log(".storys.lengthq-");
+
+                setSubIndex(subindex - 1);
+            } else {
+                console.log(".storys.length");
                 setIndex(index - 1);
+                console.log("story[index].storys.length - 1",story[index -1].storys.length -1);
+                setSubIndex(story[index -1].storys.length -1);
             }
         }
-
     }
 
     const onGoNext = () => {
-        if (selectedrow.storys.length !== subindex) {
+        if (story[index].storys.length > subindex + 1) {
+            console.log("1");
             setSubIndex(subindex + 1);
         }
-        if (selectedrow.storys.length === subindex) {
-            if (story.length > index) {
-                setIndex(index - 1);
+        else {
+            if (story.length > index + 1) {
+                setIndex(index + 1);
+                setSubIndex(0)
             }
         }
     }
@@ -62,7 +70,7 @@ export const StoryVideo = (props) => {
     }
     // ==============================================================
 
-    
+
 
     return (
         <div className='storyvideo-wapper'>
@@ -103,29 +111,31 @@ export const StoryVideo = (props) => {
                 </div>
 
                 {story.map((rw1, ky1) => {
-                    return (
-                        <div className="story"
-                            key={ky1}
-                            onClick={(e) => onStory(e, rw1)}>
-                            {/* <img src={rw1.user.profile} alt="profile" /> */}
-                            <div className="storys">
-                                {ky1 === index - 1 && rw1.storys.map((rw2, ky2) => {
-                                    if (rw2.url) {
-                                        if (ky2 === subindex - 1) {
-                                            return (
-                                                <div className="story" key={ky2}>
-                                                    <CustomRangeVideo row={rw2} />
-                                                </div>
-                                            )
+                    if (index === ky1) {
+                        return (
+                            <div className="story"
+                                key={ky1}
+                                onClick={(e) => onStory(e, rw1)}>
+                                {/* <img src={rw1.user.profile} alt="profile" /> */}
+                                <div className="storys">
+                                    {rw1.storys.map((rw2, ky2) => {
+                                        if (rw2.url) {
+                                            if (ky2 === subindex) {
+                                                return (
+                                                    <div className="story" key={ky2}>
+                                                        <CustomRangeVideo row={rw2} />
+                                                    </div>
+                                                )
+                                            }
                                         }
-                                    }
-                                })}
+                                    })}
+                                </div>
                             </div>
-                        </div>
-                    )
+                        )
+                    }
                 })}
 
-                
+
             </div>
         </div>
     )

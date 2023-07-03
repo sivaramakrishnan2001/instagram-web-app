@@ -18,11 +18,28 @@
 }
 
 .story-container>.story-content>.story {
-    width: 130px;
-    height: 130px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     border: 2px solid #22e032;
 
+}
+
+.story-container>.story-content>.story.add{
+    position: relative;
+}
+
+.story-container>.story-content>.story.add>svg{
+    position: absolute;
+    top: 80%;
+    right: 10%;
+    fill: rgb(57, 137, 241);
+    z-index: 99;
+    height: 30px;
+    width: 30px;
+    background-color: #ffffff;
+    border-radius: 100%;
+    padding: 0px;
 }
 
 .story-container>.story-content>.story>img {

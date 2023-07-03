@@ -5,6 +5,7 @@ import { AppScreensKeys, ComponentsKeys, LocalStorageKeys } from '../../connecto
 import { DrawerPopup } from '../drawerpopup/DrawerPopup';
 import { MoreOptions } from './popups/MoreOptions';
 import { useNavigate } from 'react-router-dom';
+import { Comments } from '../comments/Comments';
 
 
 export const Post = (props) => {
@@ -12,6 +13,7 @@ export const Post = (props) => {
     const varstore = useRef();
     const videoRef = useRef();
     const navigate = useNavigate();
+    const [mydetails, setMyDetails] = useState({});
     const [posts, setPosts] = useState([]);
     const [playVideo, setPlayVideo] = useState(false);
     const [selectedpost, setSelectedPost] = useState(undefined);
@@ -20,12 +22,12 @@ export const Post = (props) => {
     const [reload, setReload] = useState(false);
 
 
+
     // ==============================================================
 
     useEffect(() => {
+        setMyDetails(JSON.parse(localStorage.getItem("user")))
         onGetAllPost();
-
-
 
     }, []);
 
@@ -81,7 +83,8 @@ export const Post = (props) => {
         onUnLikePostApi(post._id, JSON.parse(LocalStorageKeys.user))
     }
 
-    const onMoreOptions = (row) => {
+    const onMoreOptions = (e, row) => {
+        e.stopPropagation();
         setSelectedPost(row);
         setShowMoreoptions(true)
     }
@@ -101,16 +104,36 @@ export const Post = (props) => {
 
     const onNavigate = (e, id) => {
         e.stopPropagation();
-        navigate(AppScreensKeys.Home + "/" + id, {
-            state: {
-                userId: id
-            }
-        });
+        if (mydetails._id === id) {
+            navigate(AppScreensKeys.Home + "/" + ComponentsKeys.PROFILE + "/" + id, {
+                state: {
+                    userId: id
+                }
+            });
+        } else {
+            navigate(AppScreensKeys.Home + "/" + ComponentsKeys.USERPROFILE + "/" + id, {
+                state: {
+                    userId: id
+                }
+            });
+        }
+
     }
 
     const handleTimeUpdate = () => {
         setCurrentTime(varstore.videoRef.currentTime);
     };
+
+    const onComment = (meg, row) => {
+        row.comments.push(
+            {
+                text: meg,
+                postedBy: mydetails
+            }
+        );
+        setReload(ps => !ps);
+        onCreateCommenMessage(row._id, meg);
+    }
 
     // ==============================================================
 
@@ -125,6 +148,8 @@ export const Post = (props) => {
                 if (i.song && i.song.song) {
                     i.audioplay = false;
                 }
+
+                i.isShowComments = false;
                 return i;
             });
             setPosts(data);
@@ -141,8 +166,7 @@ export const Post = (props) => {
         var reqObj = {
             body: {
                 postid: postid,
-                userid: userid._id,
-                token: JSON.parse(LocalStorageKeys.token),
+                userid: userid._id
             }
         };
         UpdateRequest(APIsPath.LikePost, reqObj, parseLikePostResponse, parseLikePostError);
@@ -224,17 +248,37 @@ export const Post = (props) => {
 
     // ==============================================================
 
+    const onCreateCommenMessage = (id, message) => {
+        var reqObj = {
+            body: {
+                postid: id,
+                text: message
+            }
+        };
+        UpdateRequest(APIsPath.CommentPost, reqObj, parseCreateCommenMessageResponse, parseCreateCommenMessageError);
+    }
+
+    const parseCreateCommenMessageResponse = (resObj) => {
+        if (resObj.status) {
+        }
+        console.log("resObj.status", resObj.status);
+    }
+
+    const parseCreateCommenMessageError = (err) => {
+        console.log("parseCreateCommenMessageError", err);
+    }
+
+    // ==============================================================
+
     return (
         <div className="all-posts" ref={varstore} >
             {posts?.map((row, key) => {
-                var myid = JSON.parse(LocalStorageKeys.user)?._id
-                var liked = row.likes.filter((f) => f._id === myid);
-                var save = row.save.some((i) => i === myid);
+                var liked = row.likes.filter((f) => f._id === mydetails._id);
+                var save = row.save.some((i) => i === mydetails._id);
                 var follower = row.likes.some((i) => {
-                    return i.followers.some((i) => i._id === myid)
+                    return i.followers.some((i) => i._id === mydetails._id)
                 });
 
-                console.log("follower", follower);
 
                 return (
                     <div className={'post ' + key} key={key} >
@@ -245,7 +289,7 @@ export const Post = (props) => {
                                 </div>
                                 <div className="name">{row.postedBy.name}</div>
                             </div>
-                            <div className="moreoptions" onClick={() => onMoreOptions(row)}>
+                            <div className="moreoptions" onClick={(e) => onMoreOptions(e, row)}>
                                 <svg aria-label="More options" className={"svg "} color="#262626" fill="#262626" height="24" role="img" viewBox="0 0 24 24" width="24">
                                     <circle cx="12" cy="12" r="1.5"></circle><circle cx="6" cy="12" r="1.5"></circle><circle cx="18" cy="12" r="1.5"></circle>
                                 </svg>
@@ -255,24 +299,32 @@ export const Post = (props) => {
                         {!row.audioplay ?
                             <div className="audio-icon" title="muted" onClick={(e) => {
                                 e.stopPropagation();
-                                row.audioplay = true;
+                                console.log("row.audioplay1", row.audioplay);
+
                                 for (let index = 0; index < posts.length; index++) {
                                     if (index === key) {
                                         if (row?.type === "video") {
-                                                varstore.current?.children[index]?.children[3]?.children[0]?.play();
+                                            varstore.current?.children[index]?.children[3]?.children[1]?.play();
+                                            posts[index].audioplay = true;
                                         } else {
-                                            varstore.current.children[index].children[2].play();
+                                            posts[index].audioplay = true;
+                                            console.log("posts[index].audioplay", posts[index].audioplay);
+                                            console.log("row.audioplay2", row.audioplay);
+                                            varstore?.current?.children[index]?.children[2]?.play();
+                                            varstore?.videoRef?.pause();
                                         }
 
                                     } else {
                                         posts[index].audioplay = false;
-                                        if (row?.type === "video") {
-                                                varstore?.current?.children[index]?.children[3]?.children[0]?.pause();
+                                        if (row?.type && row?.type === "video") {
+                                            varstore?.current?.children[index]?.children[3]?.children[1]?.pause();
                                         } else {
-                                            varstore.current.children[index].children[2].pause();
+                                            varstore?.current?.children[index]?.children[2]?.pause();
                                         }
                                     }
                                 }
+                                console.log("row.audioplay", row.audioplay);
+                                // row.audioplay = true;
                                 setReload((ps) => !ps);
                             }}>
                                 <svg aria-label="Audo is muted." color="#ffffff" fill="#ffffff" height="12" role="img" viewBox="0 0 48 48" width="12">
@@ -282,14 +334,14 @@ export const Post = (props) => {
                             :
                             <div className={" audio-icon"} title='playing' onClick={(e) => {
                                 e.stopPropagation();
-                                row.audioplay = false;
                                 for (let index = 0; index < posts.length; index++) {
                                     if (row.type && row.type === "video") {
-                                            varstore?.current?.children[index]?.children[3]?.children[0]?.pause();
+                                        varstore?.current?.children[index]?.children[3]?.children[1]?.pause();
                                     } else {
-                                        varstore.current.children[index].children[2].pause();
+                                        varstore.current?.children[index]?.children[2]?.pause();
                                     }
                                 }
+                                row.audioplay = false;
                                 setReload((ps) => !ps);
                             }}>
                                 <svg aria-label="Audio is playing" className="x1lliihq x1n2onr6" color="rgb(255, 255, 255)" fill="rgb(255, 255, 255)" height="12" role="img" viewBox="0 0 24 24" width="12"><title>Audio is playing</title><path d="M16.636 7.028a1.5 1.5 0 1 0-2.395 1.807 5.365 5.365 0 0 1 1.103 3.17 5.378 5.378 0 0 1-1.105 3.176 1.5 1.5 0 1 0 2.395 1.806 8.396 8.396 0 0 0 1.71-4.981 8.39 8.39 0 0 0-1.708-4.978Zm3.73-2.332A1.5 1.5 0 1 0 18.04 6.59 8.823 8.823 0 0 1 20 12.007a8.798 8.798 0 0 1-1.96 5.415 1.5 1.5 0 0 0 2.326 1.894 11.672 11.672 0 0 0 2.635-7.31 11.682 11.682 0 0 0-2.635-7.31Zm-8.963-3.613a1.001 1.001 0 0 0-1.082.187L5.265 6H2a1 1 0 0 0-1 1v10.003a1 1 0 0 0 1 1h3.265l5.01 4.682.02.021a1 1 0 0 0 1.704-.814L12.005 2a1 1 0 0 0-.602-.917Z"></path></svg>
@@ -300,10 +352,40 @@ export const Post = (props) => {
                         <audio controls id="beep" >
                             <source src={row.song?.song} type="audio/mp3" />
                         </audio>
-                        <div className="post-content">
+                        <div className="post-content"
+                            onClick={(e) => {
+                                row.audioplay = !row.audioplay;
+                                if (row.audioplay == true) {
+                                    varstore.videoRef.play();
+                                    for (let index = 0; index < posts.length; index++) {
+                                        if (row.type && row.type === "video") {
+                                            if (key !== index) {
+                                                varstore?.current?.children[index]?.children[3]?.children[1]?.pause();
+                                                varstore.current.children[index].children[2].pause();
+                                                posts[index].audioplay = false;
+                                            }
+                                        } else {
+                                            varstore.current.children[index].children[2].pause();
+                                            posts[index].audioplay = false;
+                                        }
+                                    }
+                                }
+                                if (row.audioplay == false) {
+                                    varstore.videoRef.pause();
+                                }
+
+                                setReload((ps) => !ps);
+
+                                setReload((ps) => !ps);
+
+
+                            }}
+                        >
+                            {!row.audioplay && row?.type === "video" && <div className="pause"></div>}
                             {row?.type === "video" ?
                                 <video
                                     className='video'
+                                    id='video'
                                     ref={(elem) => varstore.videoRef = elem}
                                     src={row.video}
                                     onTimeUpdate={() => handleTimeUpdate()}
@@ -315,7 +397,7 @@ export const Post = (props) => {
                         <div className="post-footer">
                             <div className="footer-header">
                                 <div className='icons like messages share'>
-                                    <span className="icon" onClick={() => onLike(row, JSON.parse(LocalStorageKeys.user), liked)}
+                                    <span className="icon" onClick={() => onLike(row, mydetails, liked)}
                                     >
                                         {liked[0] ?
                                             <svg className={"svg " + "like"} viewBox="0 0 24 24" >
@@ -326,11 +408,16 @@ export const Post = (props) => {
                                             </svg>}
 
                                     </span>
-                                    {/* <span className='icon'>
-                                        <svg aria-label="Comment" className={"svg "} color="#262626" fill="#262626" height="24" role="img" viewBox="0 0 24 24" width="24">
+                                    <span className='icon' onClick={(e) => {
+                                        e.stopPropagation();
+                                        row.isShowComments = !row.isShowComments;
+                                        setReload(ps => !ps);
+                                    }}>
+                                        <svg aria-label="Comment" className={"svg comments"} color="#262626" fill="#262626" height="20" role="img" viewBox="0 0 24 24" width="20">
                                             <path d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z" fill="none" stroke="currentColor" strokeLinejoin="round" strokeWidth="2"></path>
                                         </svg>
                                     </span>
+                                    {/* 
                                     <span className='icon'>
                                         <svg aria-label="Share Post" className={"svg "} color="#262626" fill="#262626" height="24" role="img" viewBox="0 0 24 24" width="24">
                                             <line fill="none" stroke="currentColor" strokeLinejoin="round" strokeWidth="2" x1="22" x2="9.218" y1="3" y2="10.083"></line>
@@ -347,22 +434,25 @@ export const Post = (props) => {
                                     </svg></div>
                                 }
                             </div>
-                            <div className="likes">
-                                <div className="icons">
-                                    {row.likes.map((l, lk) => {
-                                        if (lk === 0 || lk === 1 || lk === 2) {
-                                            return (
-                                                <img src={l.profile} alt="" key={lk} />
-                                            )
-                                        }
-                                    })}
+                            {!row.isShowComments &&
+                                <div className="likes">
+                                    <div className="icons">
+                                        {row.likes.map((l, lk) => {
+                                            if (lk === 0 || lk === 1 || lk === 2) {
+                                                return (
+                                                    <img src={l.profile} alt="" key={lk} />
+                                                )
+                                            }
+                                        })}
+                                    </div>
+                                    Liked by {row.likes[0]?.name} and {row.likes.length}
+                                    <div onClick={() => {
+                                        row.likedusers = !row.likedusers;
+                                        setReload(ps => !ps);
+                                    }} style={{ paddingLeft: "5px" }}> others</div>
                                 </div>
-                                Liked by {row.likes[0]?.name} and {row.likes.length}
-                                <div onClick={() => {
-                                    row.likedusers = !row.likedusers;
-                                    setReload(ps => !ps);
-                                }} style={{ paddingLeft: "5px" }}> others</div>
-                            </div>
+                            }
+
                             {row?.likedusers &&
                                 <div className="liked-users">
                                     {row.likes.map((l, lk) => {
@@ -381,8 +471,31 @@ export const Post = (props) => {
                                 </div>
                             }
 
-                            {/* <div className="body"></div>
-                            <Comments row={row} /> */}
+                            {/* <div className="body"></div> */}
+                            {row.isShowComments &&
+                                <div className='comments'>
+                                    {row.comments.map((rw, key) => {
+                                        return (
+                                            <div
+                                                className={rw.postedBy._id === mydetails._id ? 'message left' : 'message'} key={key}
+                                            >
+                                                <div className="message">
+                                                    <div className="logo">
+                                                        <img src={rw.postedBy.profile} alt="profile" />
+                                                    </div>
+                                                    <div className="content">
+                                                        <div className="id">{rw.postedBy.name}</div>
+                                                        <div className="text">{rw.text}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )
+                                    })}
+                                    <Comments profile={mydetails.profile} onChange={(message) => onComment(message, row)} />
+                                </div>
+                            }
+
+
                         </div>
                     </div>
                 )

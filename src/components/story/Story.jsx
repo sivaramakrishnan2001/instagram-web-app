@@ -13,15 +13,22 @@ export const Story = () => {
     const [showstory, setShowStory] = useState(false);
     const [selectedrow, setSelectedRow] = useState({});
     const [selectedindex, setSelectedIndex] = useState(0);
+    const [user, setUser] = useState({});
 
     // ==============================================================
 
     useEffect(() => {
+        setUser(JSON.parse(localStorage.getItem("user")));
+        getUserDeatils();
         onGetAllStory();
 
     }, []);
 
     // ==============================================================
+
+    const onCreateStory = () => {
+
+    }
 
     const onStory = (e, row, inx) => {
         setShowStory(true);
@@ -67,10 +74,37 @@ export const Story = () => {
     }
     // ==============================================================
 
+    const getUserDeatils = () => {
+        var reqObj = {};
+        GetRequest(APIsPath.GetUser + JSON.parse(localStorage.getItem("user"))?._id, reqObj, parseGetUserDeatilsResponse, parseGetUserDeatilsError);
+    }
+
+    const parseGetUserDeatilsResponse = (resObj) => {
+        if (resObj.status) {
+            setUser(resObj.data);
+        }
+        console.log("resObj", resObj);
+    }
+
+    const parseGetUserDeatilsError = (err) => {
+        console.log("parseGetAllStoryError", err);
+    }
+    // ==============================================================
+
     return (
         <React.Fragment>
             <div className='story-container'>
                 <div className='story-content'>
+                    <div className="story add" onClick={(e) => onCreateStory()}>
+                        <img src={user.profile} alt="profile" />
+                        <svg
+                            aria-hidden="true"
+                            viewBox="0 0 24 24"
+                           
+                        >
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"></path>
+                        </svg>
+                    </div>
                     {story.map((row, key) => {
                         return (
                             <div className="story" key={key} onClick={(e) => onStory(e, row, key)}>

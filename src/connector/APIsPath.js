@@ -1,7 +1,9 @@
 
 export const APIsPath = {
 
-    BaseUrl: 'http://localhost:2000',
+    // BaseUrl: 'http://localhost:2000',
+    BaseUrl: 'https://sivaramakrishnan-webapp-instagram.onrender.com',
+
 
     // Authentication
     SignUp: '/signup',
@@ -18,6 +20,8 @@ export const APIsPath = {
     // chats 
     GetMessages: '/getMessages',
 
+
+    // post
     AllPost: '/allpost',
     Post: '/createPost',
     DeletePost: '/post/delete',
@@ -25,6 +29,7 @@ export const APIsPath = {
     UnLikePost: '/post/unlike',
     SavePost: "/post/save",
     UnSavePost: "/post/unsave",
+    CommentPost: '/post/comment',
     GetUserPost: "/post/userPost/",
 
     // save

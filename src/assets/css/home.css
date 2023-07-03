@@ -1,10 +1,10 @@
 .home {
     width: 100%;
-    padding: 10px 75px;
     display: flex;
     flex-direction: column;
     overflow: scroll;
     row-gap: 20px;
+    padding-left: 120px;
 }
 
 
