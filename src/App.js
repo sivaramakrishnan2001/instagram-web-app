@@ -44,6 +44,7 @@ export const App = () => {
         <React.Fragment>
             <div>Test</div>
             <Routes>
+                
                 <Route exact path="/signup" element={<SignUpPage />} />
                 <Route exact path="/login" element={<LoginPage />} />
                 <Route path={AppScreensKeys.Home} exact element={<ApplicationPage />} />
@@ -59,6 +60,7 @@ export const App = () => {
                     <ApplicationPage currentpage="userprofile" />
                 } />
                 <Route exact path="/test" element={<Test />} />
+                <Route exact path="*" element={<div>Not found Error Blank Page</div>} />
             </Routes>
 
         </React.Fragment>
