@@ -18,7 +18,7 @@ import { getMessaging, getToken } from 'firebase/messaging';
 export const App = () => {
 
     useEffect(() => {
-        console.log("process.env.BaseUrl",process.env.REACT_APP_BASE_URL);
+        console.log("process.env.BaseUrl", process.env.REACT_APP_BASE_URL);
         // requestPermission();
     }, []);
 
@@ -26,7 +26,7 @@ export const App = () => {
         console.log('Requesting permission...');
         let permission = await Notification.requestPermission();
         let token = await getToken(initializeApp(firebaseConfig), { vapidKey: 'BIZrWojodZgcZMYOMkBR5VnKrFtc_4nEGx1j6m2BeO9PFyKzb9AfQpNCNwekGp4_HiAkzhR5pQFMvd3oJjxj2E4' });
-        console.log("token",token);
+        console.log("token", token);
         if (permission && permission === 'granted') {
             if (token) {
                 console.log("token", token);
@@ -42,7 +42,7 @@ export const App = () => {
 
     return (
         <React.Fragment>
-
+            <div>Test</div>
             <Routes>
                 <Route exact path="/signup" element={<SignUpPage />} />
                 <Route exact path="/login" element={<LoginPage />} />
