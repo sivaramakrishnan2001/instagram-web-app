@@ -2,7 +2,7 @@
 export const APIsPath = {
 
     // BaseUrl: 'http://localhost:2000',
-    BaseUrl: 'https://sivaramakrishnan-webapp-instagram.onrender.com',
+    BaseUrl: process.env.REACT_APP_BASE_URL,
 
 
     // Authentication

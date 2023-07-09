@@ -18,6 +18,7 @@ import { getMessaging, getToken } from 'firebase/messaging';
 export const App = () => {
 
     useEffect(() => {
+        console.log("process.env.BaseUrl",process.env.REACT_APP_BASE_URL);
         // requestPermission();
     }, []);
 
