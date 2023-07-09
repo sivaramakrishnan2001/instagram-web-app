@@ -18,7 +18,7 @@ import { getMessaging, getToken } from 'firebase/messaging';
 export const App = () => {
 
     useEffect(() => {
-        requestPermission();
+        // requestPermission();
     }, []);
 
     const requestPermission = async () => {

@@ -62,13 +62,13 @@ export const ComponentsKeys = {
 export const Components = [
     { id: ComponentsKeys.HOME, title: "Home", icon: <HOME /> },
     { id: ComponentsKeys.SEARCH, title: "Search", icon: <SEARCH /> },
-    { id: ComponentsKeys.EXPLORE, title: "Explore", icon: <EXPLORE /> },
+    // { id: ComponentsKeys.EXPLORE, title: "Explore", icon: <EXPLORE /> },
     { id: ComponentsKeys.REELS, title: "Reels", icon: <REELS /> },
-    { id: ComponentsKeys.MESSAGES, title: "Messages", icon: <MESSAGES /> },
-    { id: ComponentsKeys.NOTIFICATIONS, title: "Notifications", icon: <NOTIFICATIONS /> },
+    // { id: ComponentsKeys.MESSAGES, title: "Messages", icon: <MESSAGES /> },
+    // { id: ComponentsKeys.NOTIFICATIONS, title: "Notifications", icon: <NOTIFICATIONS /> },
     { id: ComponentsKeys.CREATE, title: "Create", icon: <CREATE /> },
     { id: ComponentsKeys.PROFILE, title: "Profile", icon: <REELS /> },
-    { id: ComponentsKeys.MORE, title: "more", icon: <MORE /> },
+    // { id: ComponentsKeys.MORE, title: "more", icon: <MORE /> },
     { id: ComponentsKeys.USERPROFILE, title: "User Profile", icon: "" }
 ];
 

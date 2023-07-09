@@ -90,7 +90,7 @@ export const CustomRangeVideo = (props) => {
     }
 
     // ==============================================================
-
+    if (!props.row.url) return "";
     return (
         <div className='video' onClick={(e) => handlePlayPause(e)}>
             {!isPlaying && <div className="pause"></div>}
@@ -104,10 +104,10 @@ export const CustomRangeVideo = (props) => {
             /> */}
             <div className="user">
                 <div className="profile" >
-                    <img src={props.row.postedBy.profile} alt="profile" />
+                    {props.row?.postedBy?.profile && <img src={props.row?.postedBy?.profile} alt="profile" />}
                 </div>
                 <div className="content">
-                    {props.row.postedBy.name}
+                    {props.row?.postedBy?.name}
                 </div>
             </div>
             <video
