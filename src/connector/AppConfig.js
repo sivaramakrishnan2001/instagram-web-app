@@ -19,16 +19,7 @@ export const Me = {
 // console.log("🤞", Me);
 
 
-export const FirebaseConfig = {
-    BucketUrl: "gs://mern-stack-ef0e9.appspot.com",
 
-    FireBase_ApiKey: "AIzaSyAvDJNhcHFu045VYVAnFTjmBNkmaDSMWpU",
-    FireBase_AuthDomain: "mern-stack-ef0e9.firebaseapp.com",
-    FireBase_ProjectId: "mern-stack-ef0e9",
-    FireBase_StorageBucket: "mern-stack-ef0e9.appspot.com",
-    FireBase_MessagingSenderId: "611652026877",
-    FireBase_AppId: "1:611652026877:web:d25871dccd390b98c15994"
-}
 
 export const LocalStorageKeys = {
     user: localStorage.getItem("user"),
