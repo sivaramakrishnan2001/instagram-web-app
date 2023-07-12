@@ -55,7 +55,7 @@ export const Components = [
     { id: ComponentsKeys.SEARCH, title: "Search", icon: <SEARCH /> },
     // { id: ComponentsKeys.EXPLORE, title: "Explore", icon: <EXPLORE /> },
     { id: ComponentsKeys.REELS, title: "Reels", icon: <REELS /> },
-    // { id: ComponentsKeys.MESSAGES, title: "Messages", icon: <MESSAGES /> },
+    { id: ComponentsKeys.MESSAGES, title: "Messages", icon: <MESSAGES /> },
     // { id: ComponentsKeys.NOTIFICATIONS, title: "Notifications", icon: <NOTIFICATIONS /> },
     { id: ComponentsKeys.CREATE, title: "Create", icon: <CREATE /> },
     { id: ComponentsKeys.PROFILE, title: "Profile", icon: <REELS /> },
@@ -64,7 +64,7 @@ export const Components = [
 ];
 
 export const SessionStorageKeys = {
-    ActiveMenu: "activemenu"
+    ActiveMenu: "activemenu",
 }
 
 export const FileTypes = {

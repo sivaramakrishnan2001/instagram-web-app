@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Content } from '../../components/application/Content';
 import { LeftMenu } from '../../components/application/LeftMenu';
-import { AppScreensKeys, Components, ComponentsKeys, SessionStorageKeys } from '../../connector/AppConfig';
+import { AppScreensKeys, Components, ComponentsKeys, LocalStorageKeys, SessionStorageKeys } from '../../connector/AppConfig';
 import { useNavigate, useParams } from 'react-router-dom';
 import { GetRequest } from '../../connector/APIsCommunicator';
 import { APIsPath } from '../../connector/APIsPath';
 
 export const ApplicationPage = (props) => {
+
     const params = useParams();
     const navigator = useNavigate();
     const [selected, setSelected] = useState(Components[0]);
@@ -16,66 +17,67 @@ export const ApplicationPage = (props) => {
     // ==============================================================
 
     useEffect(() => {
+
         setMyDetails(JSON.parse(localStorage.getItem("user")));
         if (mydetails._id) {
             getProfileApi();
         }
+
+        if (sessionStorage.getItem(SessionStorageKeys.ActiveMenu)) {
+            setSelected(Components.filter((i) => i.id === sessionStorage.getItem(SessionStorageKeys.ActiveMenu))[0])
+        }
+
     }, []);
 
+    useEffect(() => {
+        console.log("params", params);
+        if (params.userId) {
+            if (JSON.parse(localStorage.getItem("user"))?._id === params.userId) {
+                setSelected(Components.filter((i) => i.id === ComponentsKeys.PROFILE)[0]);
+            } else {
+                setSelected(Components.filter((i) => i.id === ComponentsKeys.USERPROFILE)[0]);
+            }
+        }
+        setReload(ps => !ps);
 
-    // useEffect(() => {
-    //     console.log("params0 = ", params);
-    //     if (params.userId) {
-    //         onSelected({ id: ComponentsKeys.USERPROFILE, title: "User Profile", icon: "" });
-    //     }
-    //     AuthContext.changeTabe = onSelected;
-    //     var id = sessionStorage.getItem(SessionStorageKeys.ActiveMenu);
-    //     if (id !== "") {
-    //         setSelected(Components.filter((i) => i.id === id)[0])
-    //     }
-    // }, []);
+    }, [params.userId]);
 
-    // useEffect(() => {
-    //     if (props.currentpage === "userprofile") {
-    //         onSelected({ id: ComponentsKeys.USERPROFILE, title: "User Profile", icon: "" });
-    //     }
-    // }, [props.currentpage]);
 
+    useEffect(() => {
+        if (selected.id === ComponentsKeys.HOME) {
+            navigator(AppScreensKeys.Home + "/");
+        }
+        else if (selected.id === ComponentsKeys.SEARCH) {
+            navigator(AppScreensKeys.Home + "/" + ComponentsKeys.SEARCH);
+        }
+        else if (selected.id === ComponentsKeys.EXPLORE) {
+            navigator(AppScreensKeys.Home + "/" + ComponentsKeys.EXPLORE);
+        }
+        else if (selected.id === ComponentsKeys.REELS) {
+            navigator(AppScreensKeys.Home + "/" + ComponentsKeys.REELS);
+        }
+        else if (selected.id === ComponentsKeys.MESSAGES) {
+            navigator(AppScreensKeys.Home + "/" + ComponentsKeys.MESSAGES);
+        }
+        else if (selected.id === ComponentsKeys.NOTIFICATIONS) {
+            navigator(AppScreensKeys.Home + "/" + ComponentsKeys.NOTIFICATIONS);
+        }
+        else if (selected.id === ComponentsKeys.CREATE) {
+            navigator(AppScreensKeys.Home + "/" + ComponentsKeys.CREATE);
+        }
+        else if (selected.id === ComponentsKeys.PROFILE) {
+            navigator(AppScreensKeys.Home + "/" + ComponentsKeys.PROFILE + "/" + JSON.parse(localStorage.getItem("user"))?._id);
+        }
+        else if (selected.id === ComponentsKeys.USERPROFILE) {
+            navigator(AppScreensKeys.Home + "/" + ComponentsKeys.USERPROFILE + "/" + JSON.parse(localStorage.getItem("user"))?._id);
+        }
+        sessionStorage.setItem(SessionStorageKeys.ActiveMenu, selected.id)
+        setReload((ps) => !ps);
+
+    }, [selected]);
 
     const onSelected = (row) => {
         setSelected(row);
-        // if (sessionStorage.getItem(SessionStorageKeys.ActiveMenu) !== "userprofile") {
-        //     navigator(AppScreensKeys.Home);
-        // }
-        if (row.id === ComponentsKeys.HOME) {
-            navigator(AppScreensKeys.Home + "/");
-        }
-        else if (row.id === ComponentsKeys.SEARCH) {
-            navigator(AppScreensKeys.Home + "/" + ComponentsKeys.SEARCH);
-        }
-        else if (row.id === ComponentsKeys.EXPLORE) {
-            navigator(AppScreensKeys.Home + "/" + ComponentsKeys.EXPLORE);
-        }
-        else if (row.id === ComponentsKeys.REELS) {
-            navigator(AppScreensKeys.Home + "/" + ComponentsKeys.REELS);
-        }
-        else if (row.id === ComponentsKeys.MESSAGES) {
-            navigator(AppScreensKeys.Home + "/" + ComponentsKeys.MESSAGES);
-        }
-        else if (row.id === ComponentsKeys.NOTIFICATIONS) {
-            navigator(AppScreensKeys.Home + "/" + ComponentsKeys.NOTIFICATIONS);
-        }
-        else if (row.id === ComponentsKeys.CREATE) {
-            navigator(AppScreensKeys.Home + "/" + ComponentsKeys.CREATE);
-        }
-        else if (row.id === ComponentsKeys.PROFILE) {
-            navigator(AppScreensKeys.Home + "/" + ComponentsKeys.PROFILE + "/" + JSON.parse(localStorage.getItem("user"))?._id);
-        }
-        else if (row.id === ComponentsKeys.USERPROFILE) {
-            navigator(AppScreensKeys.Home + "/" + ComponentsKeys.USERPROFILE + "/" + JSON.parse(localStorage.getItem("user"))?._id);
-        }
-        sessionStorage.setItem(SessionStorageKeys.ActiveMenu, row.id)
-        setReload((ps) => !ps);
     }
 
     // ==============================================================

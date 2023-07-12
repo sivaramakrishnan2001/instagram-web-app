@@ -4,7 +4,7 @@ import { Songs } from '../songs/Songs';
 import { PostRequest } from '../../connector/APIsCommunicator';
 import { APIsPath } from '../../connector/APIsPath';
 
-export const CreateStickyNotes = () => {
+export const CreateStickyNotes = (props) => {
 
     const varstore = useRef();
     const [stickynotes, setStickyNotes] = useState({
@@ -17,7 +17,6 @@ export const CreateStickyNotes = () => {
     // ==============================================================
 
     const onSelectedSong = (row) => {
-        console.log(row,"row...");
         setStickyNotes({ ...stickynotes, song: row });
         setShowSongs(false);
     }
@@ -38,7 +37,6 @@ export const CreateStickyNotes = () => {
         var data = {
             body: stickynotes
         };
-        console.log("data",data);
         if (data.body.song.song) {
             PostRequest(APIsPath.CreateStickyNotes, data, parseCreateStickyNoteResponse, parseCreateStickyNoteError);
         }
@@ -47,13 +45,13 @@ export const CreateStickyNotes = () => {
     const parseCreateStickyNoteResponse = (resObj) => {
         if (resObj.status) {
             alert("updated");
+            props.onChange();
         }
         console.log("parseCreateStickyNoteResponse", resObj);
     }
 
     const parseCreateStickyNoteError = (err) => {
         alert("err");
-        console.log("parseCreateStickyNoteError", err);
     }
 
     // ==============================================================
@@ -61,10 +59,10 @@ export const CreateStickyNotes = () => {
     return (
 
         <React.Fragment>
-            <div className="create-post">
+            <div className="createstickynotes">
             
-                <div className='create'>
-                CreateStickyNotes
+                <div className='content'>
+                
                     <input
                         ref={(elem) => varstore.title = elem} type="text"
                         value={stickynotes.title}

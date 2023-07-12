@@ -14,40 +14,12 @@ export const Content = props => {
 
 
     const navigate = useNavigate();
-    const params = useParams();
     const [selectedid, setSelectedId] = useState("");
     const [reload, setReload] = useState(false);
 
     // ==============================================================
-    useEffect(() => {
-        if (sessionStorage.getItem(SessionStorageKeys.ActiveMenu)) {
-            setSelectedId(sessionStorage.getItem(SessionStorageKeys.ActiveMenu));
-        } else {
-            if (props.selected && props.selected.id) {
-                setSelectedId(props.selected.id);
-            }
-        }
 
-    }, []);
-
-    useEffect(() => {
-        console.log("params", params);
-        if (params.userId) {
-            if (JSON.parse(LocalStorageKeys.user)?._id === params.userId) {
-                setSelectedId(ComponentsKeys.PROFILE);
-            } else {
-                setSelectedId(ComponentsKeys.USERPROFILE);
-            }
-            setReload(ps => !ps);
-            // onSelected({ id: ComponentsKeys.USERPROFILE, title: "Profile", icon: "" });
-        }else{
-            if (sessionStorage.getItem("activemenu")) {
-                setSelectedId(sessionStorage.getItem("activemenu"));
-            }
-        }
-
-
-    }, [params.userId]);
+  
 
     useEffect(() => {
         console.log("props.selected.id", props.selected.id);
@@ -70,8 +42,6 @@ export const Content = props => {
             case ComponentsKeys.SEARCH: return <Search />;
             case ComponentsKeys.USERPROFILE: return <UserProfile />;
             case ComponentsKeys.REELS: return <Reels />;
-
-
             default:
                 break;
         }

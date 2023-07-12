@@ -4,6 +4,7 @@ import { GetRequest } from '../../connector/APIsCommunicator';
 import Music from "../../assets/images/gif/sound.gif";
 import { DrawerPopup } from '../drawerpopup/DrawerPopup';
 import { StickyNotesMusic } from './StickyNotesMusic';
+import { CreateStickyNotes } from './CreateStickyNotes';
 
 export const StickyNotes = () => {
 
@@ -11,15 +12,23 @@ export const StickyNotes = () => {
     const [showsongs, setShowSongs] = useState(false);
     const [selectedstickynote, setSelectedStickyNote] = useState({});
     const [reload, setReload] = useState(false);
+    const [mydetails, setMyDetails] = useState({});
+    const [type, setType] = useState('');
 
 
     // ==============================================================
 
     useEffect(() => {
+        setMyDetails(JSON.parse(localStorage.getItem("user")))
         onGetAllStickyNotes();
     }, []);
 
     const onOuterClick = () => {
+        setShowSongs(false);
+    }
+
+    const onChange=()=>{
+        onGetAllStickyNotes();
         setShowSongs(false);
     }
 
@@ -53,31 +62,30 @@ export const StickyNotes = () => {
 
     return (
         <div className='stickynotes-container'>
+            <div class="story add stickynotes">
+                <img alt="profile" src={mydetails?.profile} />
+                <svg onClick={() => { setType('create'); setShowSongs(true); }} aria-hidden="true" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"></path>
+                </svg>
+            </div>
             {stickynotes.map((row, key) => {
                 return (
                     <div className="stickynotes" key={key}>
-                        <img src={row.song.img}  />
+                        <img src={row.song.img} />
                         <div className="content" onClick={() => {
                             setSelectedStickyNote(row);
                             setShowSongs(true);
                         }}>
-                            <img src={Music}  />
-
-
-
+                            <img src={Music} />
                             <div className="title">{row.title}</div>
-
                         </div>
-
-
                     </div>
                 )
             })}
 
-            {
-                showsongs &&
+            {showsongs &&
                 <DrawerPopup size="default" position="right" isopen={showsongs} className="sample"
-                    content={<StickyNotesMusic StickyNote={selectedstickynote} />}
+                    content={type === "create" ? <CreateStickyNotes onChange={() => onChange()} /> : <StickyNotesMusic StickyNote={selectedstickynote} />}
                     OuterClick={() => onOuterClick()}
                 />
             }

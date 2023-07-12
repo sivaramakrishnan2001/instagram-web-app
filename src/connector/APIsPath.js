@@ -1,8 +1,8 @@
 
 export const APIsPath = {
 
-    // BaseUrl: 'http://localhost:2000',
-    BaseUrl: process.env.REACT_APP_BASE_URL,
+    BaseUrl: 'http://localhost:2000',
+    // BaseUrl: process.env.REACT_APP_BASE_URL,
 
 
     // Authentication
@@ -53,7 +53,7 @@ export const APIsPath = {
     CreateStickyNotes: "/createStickyNotes",
     GetAllStickyNotes: "/getAllStickyNotes",
     GetStickyNotes: "/getStickyNotes",
-    DeleteStickyNotes: "/stickyNotes/delete/:id",
+    DeleteStickyNotes: "/stickyNotes/delete/",
     DeleteAllStickyNotes: "/stickyNotes/delete/",
 
     // storys

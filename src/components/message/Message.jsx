@@ -5,6 +5,7 @@ import { APIsPath } from '../../connector/APIsPath';
 import { LocalStorageKeys } from '../../connector/AppConfig';
 import { MessageBox } from '../../uielements/messagebox/MessageBox';
 import { LeftSilder } from './LeftSilder';
+import { StickyNotes } from '../stickynotes/StickyNotes';
 
 export const Message = () => {
 
@@ -19,7 +20,7 @@ export const Message = () => {
     // ==============================================================
 
     useEffect(() => {
-        setSocket(io('ws://localhost:2001'));
+        // setSocket(io('ws://localhost:2001'));
 
     }, []);
 
@@ -106,6 +107,7 @@ export const Message = () => {
 
     return (
         <div className='message-container'>
+            <StickyNotes />
             <div className="left">
                 <div className="header"></div>
                 <LeftSilder onClick={onSelectUser} />

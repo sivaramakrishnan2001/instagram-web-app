@@ -11,38 +11,19 @@ import { LoginPage } from './screens/authentication/login/LoginPage';
 import { SignUpPage } from './screens/authentication/signup/SignUpPage';
 import { SecureScreen } from './components/securescreen/SecureScreen';
 import { AppScreensKeys, ComponentsKeys } from './connector/AppConfig';
-import { GetDeviceToken, firebaseConfig, requestPermission } from './firebase.js';
-import { initializeApp } from 'firebase/app';
-import { getMessaging, getToken } from 'firebase/messaging';
+import { getTokenFromFirebase } from './firebase';
+
 
 export const App = () => {
 
     useEffect(() => {
-        console.log("process.env.BaseUrl", process.env.REACT_APP_BASE_URL);
-        // requestPermission();
+  
     }, []);
 
-    const requestPermission = async () => {
-        console.log('Requesting permission...');
-        let permission = await Notification.requestPermission();
-        let token = await getToken(initializeApp(firebaseConfig), { vapidKey: 'BIZrWojodZgcZMYOMkBR5VnKrFtc_4nEGx1j6m2BeO9PFyKzb9AfQpNCNwekGp4_HiAkzhR5pQFMvd3oJjxj2E4' });
-        console.log("token", token);
-        if (permission && permission === 'granted') {
-            if (token) {
-                console.log("token", token);
-            } else {
-                console.log("con't get token");
-            }
-
-        } else {
-            console.log("you not allow notifiction");
-        }
-    }
 
 
     return (
         <React.Fragment>
-            <div>Test</div>
             <Routes>
                 
                 <Route exact path="/signup" element={<SignUpPage />} />

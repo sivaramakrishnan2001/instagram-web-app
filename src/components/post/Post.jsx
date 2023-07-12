@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { APIsPath } from '../../connector/APIsPath';
 import { GetRequest, PostRequest, UpdateRequest } from '../../connector/APIsCommunicator';
-import { AppScreensKeys, ComponentsKeys, LocalStorageKeys } from '../../connector/AppConfig';
+import { AppScreensKeys, ComponentsKeys, LocalStorageKeys, SessionStorageKeys } from '../../connector/AppConfig';
 import { DrawerPopup } from '../drawerpopup/DrawerPopup';
 import { MoreOptions } from './popups/MoreOptions';
 import { useNavigate } from 'react-router-dom';
@@ -111,6 +111,7 @@ export const Post = (props) => {
                 }
             });
         } else {
+            sessionStorage.setItem(SessionStorageKeys.ActiveMenu, ComponentsKeys.USERPROFILE)
             navigate(AppScreensKeys.Home + "/" + ComponentsKeys.USERPROFILE + "/" + id, {
                 state: {
                     userId: id
@@ -276,9 +277,12 @@ export const Post = (props) => {
                 var liked = row.likes.filter((f) => f._id === mydetails._id);
                 var save = row.save.some((i) => i === mydetails._id);
                 var follower = row.likes.some((i) => {
-                    return i.followers.some((i) => i._id === mydetails._id)
+                    return i.followers.some((i) => {
+                        console.log("i._id === mydetails._id", i._id, mydetails._id);
+                        return i._id === mydetails._id
+                    })
                 });
-
+                console.log("follower", follower);
 
                 return (
                     <div className={'post ' + key} key={key} >
@@ -449,24 +453,26 @@ export const Post = (props) => {
                                     <div onClick={() => {
                                         row.likedusers = !row.likedusers;
                                         setReload(ps => !ps);
-                                    }} style={{ paddingLeft: "5px" }}> others</div>
+                                    }} style={{ paddingLeft: "5px", cursor: "pointer" }}> others</div>
                                 </div>
                             }
 
                             {row?.likedusers &&
                                 <div className="liked-users">
                                     {row.likes.map((l, lk) => {
-                                        return (
-                                            <div className="user" key={lk}>
-                                                <img src={l.profile} onClick={(e) => onNavigate(e, l._id)} alt="" key={lk} />
-                                                <div className="name">{l.name}</div>
-                                                {follower ?
-                                                    <div className="btn">Unfollow</div>
-                                                    :
-                                                    <div className="btn">Follow</div>
-                                                }
-                                            </div>
-                                        )
+                                        if (l._id !== mydetails._id) {
+                                            return (
+                                                <div className="user" key={lk}>
+                                                    <img src={l.profile} onClick={(e) => onNavigate(e, l._id)} alt="" key={lk} />
+                                                    <div className="name">{l.name}</div>
+                                                    {follower ?
+                                                        <div className="btn">Unfollow</div>
+                                                        :
+                                                        <div className="btn">Follow</div>
+                                                    }
+                                                </div>
+                                            )
+                                        }
                                     })}
                                 </div>
                             }
@@ -476,8 +482,7 @@ export const Post = (props) => {
                                 <div className='comments'>
                                     {row.comments.map((rw, key) => {
                                         return (
-                                            <div
-                                                className={rw.postedBy._id === mydetails._id ? 'message left' : 'message'} key={key}
+                                            <div className={rw.postedBy._id === mydetails._id ? 'message replay' : 'message'} key={key}
                                             >
                                                 <div className="message">
                                                     <div className="logo">
