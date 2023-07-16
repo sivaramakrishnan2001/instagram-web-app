@@ -8,6 +8,7 @@ export const APIsPath = {
     // Authentication
     SignUp: '/signup',
     Login: '/login',
+    FirebaseAuthentication:'/firebaseAuthentication',
 
     GetUser: '/user/',
     GetUsers: "/users",

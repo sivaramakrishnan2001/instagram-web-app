@@ -5,6 +5,9 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { PostRequest } from '../../connector/APIsCommunicator';
 import { APIsPath } from '../../connector/APIsPath';
 import { AppScreensKeys } from '../../connector/AppConfig';
+import { signInWithPopup, GoogleAuthProvider, getRedirectResult } from "firebase/auth";
+import { auth, provider } from '../../firebase';
+import { GoogleSignInButton } from '../../uielements/buttons/Buttons';
 
 export const Login = () => {
 
@@ -134,6 +137,49 @@ export const Login2 = () => {
 		onLoginApiCall();
 	}
 
+	const onLoginGoogleAuth = () => {
+		signInWithPopup(auth, provider)
+			.then((result) => {
+				// This gives you a Google Access Token. You can use it to access the Google API.
+				const credential = GoogleAuthProvider.credentialFromResult(result);
+				const token = credential.accessToken;
+				console.log("token", token);
+				// The signed-in user info.
+				const user = result.user;
+				console.log("user", user);
+				// IdP data available using getAdditionalUserInfo(result)
+				let reqObj = {
+					body: {
+						name: user.displayName,
+						email: user.email,
+						number: user.phoneNumber
+					}
+				}
+				PostRequest(APIsPath.FirebaseAuthentication, reqObj, (resObj) => {
+					if (resObj.status) {
+						navigate(AppScreensKeys.Home, {
+							state: {
+								token: resObj.data.token,
+								user: resObj.data.user
+							}
+						});
+					}
+					console.log("resObj", resObj);
+				}, (err) => {
+					console.log("err", err);
+				})
+			}).catch((error) => {
+				// Handle Errors here.
+				const errorCode = error.code;
+				const errorMessage = error.message;
+				// The email of the user's account used.
+				const email = error.customData.email;
+				// The AuthCredential type that was used.
+				const credential = GoogleAuthProvider.credentialFromError(error);
+				// ...
+			});
+	}
+
 	// ==============================================================
 	// functions
 
@@ -199,6 +245,11 @@ export const Login2 = () => {
 								onKeyDown={(e) => e.key === "Enter" ? onLogin(e) : ""}
 							/>
 							<div className='button' type="submit" name="" value="Login" onClick={(e) => onLogin(e)} >Login</div>
+							<div className="button" style={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
+								<GoogleSignInButton onClick={(e) => onLoginGoogleAuth(e)} />
+							</div>
+
+
 							<p className="signup">
 								Don't have an account ?
 								<a href="#" onClick={() => setToggleForm(true)}>Sign Up.</a>
@@ -215,6 +266,9 @@ export const Login2 = () => {
 							<input type="password" name="" placeholder="Create Password" />
 							<input type="password" name="" placeholder="Confirm Password" />
 							<input type="submit" name="" value="Sign Up" />
+							<div className="button" style={{ display: 'flex', alignContent: 'center', justifyContent: 'center' ,paddingTop:"20px"}}>
+								<GoogleSignInButton onClick={(e) => onLoginGoogleAuth(e)} />
+							</div>
 							<p className="signup">
 								Already have an account ?
 								<a href="#" onClick={() => setToggleForm(false)} >Sign in.</a>
