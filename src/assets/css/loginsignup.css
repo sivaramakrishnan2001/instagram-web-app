@@ -10,11 +10,11 @@
 section {
   position: relative;
   min-height: 100vh;
-  background-color: #f8dd30;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
+  
 }
 
 section .container {
@@ -24,6 +24,7 @@ section .container {
   background: #fff;
   box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 }
 
 section .container .user {
@@ -39,7 +40,7 @@ section .container .user .imgBx {
   position: relative;
   width: 50%;
   height: 100%;
-  background: #ff0;
+  /* background: #ff0; */
   transition: 0.5s;
 }
 
@@ -91,7 +92,6 @@ section .container .user .formBx form input {
 }
 
 section .container .user .formBx form .button[type='submit'] {
-  max-width: 100px;
   background: #677eff;
   color: #fff;
   cursor: pointer;
@@ -104,6 +104,7 @@ section .container .user .formBx form .button[type='submit'] {
   align-items: center;
   justify-content: center;
   margin-top: 10px;
+  margin-bottom: 5px;
 }
 
 section .container .user .formBx form .signup {
