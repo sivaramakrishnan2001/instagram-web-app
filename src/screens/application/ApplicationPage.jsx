@@ -17,16 +17,13 @@ export const ApplicationPage = (props) => {
     // ==============================================================
 
     useEffect(() => {
-
         setMyDetails(JSON.parse(localStorage.getItem("user")));
         if (mydetails._id) {
             getProfileApi();
         }
-
         if (sessionStorage.getItem(SessionStorageKeys.ActiveMenu)) {
             setSelected(Components.filter((i) => i.id === sessionStorage.getItem(SessionStorageKeys.ActiveMenu))[0])
         }
-
     }, []);
 
     useEffect(() => {

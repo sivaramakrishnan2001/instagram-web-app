@@ -7,22 +7,20 @@ import { MessageBox } from '../../uielements/messagebox/MessageBox';
 import { LeftSilder } from './LeftSilder';
 import { StickyNotes } from '../stickynotes/StickyNotes';
 
-export const Message = () => {
+export const Message = (props) => {
 
     const [selectedUser, setSelectedUser] = useState(undefined);
     const [messages, setMessages] = useState([]);
     const [socket, setSocket] = useState(null);
     const [arrivalMessage, setArrivalMessage] = useState(null);
-    const [user, setUser] = useState(JSON.parse(LocalStorageKeys.user));
-
-
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
 
     // ==============================================================
 
     useEffect(() => {
-        // setSocket(io('ws://localhost:2001'));
+        setSocket(props.socket);
 
-    }, []);
+    }, [props.socket]);
 
     useEffect(() => {
         console.log("socket", socket);
@@ -80,7 +78,7 @@ export const Message = () => {
     const onSend = (data) => {
         socket.emit("sendMessage", {
             senderId: user._id,
-            receiverId: selectedUser._id,
+            // receiverId: selectedUser._id,
             text: data,
         });
     }
@@ -107,18 +105,18 @@ export const Message = () => {
 
     return (
         <div className='message-container'>
-            <StickyNotes />
+            {/* <StickyNotes /> */}
             <div className="left">
                 <div className="header"></div>
                 <LeftSilder onClick={onSelectUser} />
             </div>
             <div className="right">
                 <div className="messages">
-                    {messages?.map((row, key) => {
+                    {/* {messages?.map((row, key) => {
                         return (
                             <div className={row?.myself ? "message right" : "message left"} key={key}>{row.message}</div>
                         )
-                    })}
+                    })} */}
                 </div>
                 <MessageBox onSend={onSend} />
             </div>

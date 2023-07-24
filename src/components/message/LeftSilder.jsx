@@ -17,8 +17,7 @@ export const LeftSilder = (props) => {
     // onClick
 
     const onClickUser = (row) => {
-        if (!props.onClick) return;
-        props.onClick(row);
+        props.onClick && props.onClick(row);
     }
 
     // ==============================================================

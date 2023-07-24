@@ -8,7 +8,7 @@ export const APIsPath = {
     // Authentication
     SignUp: '/signup',
     Login: '/login',
-    FirebaseAuthentication:'/firebaseAuthentication',
+    FirebaseAuthentication: '/firebaseAuthentication',
 
     GetUser: '/user/',
     GetUsers: "/users",
@@ -20,6 +20,11 @@ export const APIsPath = {
 
     // chats 
     GetMessages: '/getMessages',
+
+    // chat2
+    GetAllConversationUser: '/user/getAllConversation',
+    GetConversationAllMessages: '/user/getConversationMessages',
+    CreateConversation:'/user/createConversation',
 
 
     // post

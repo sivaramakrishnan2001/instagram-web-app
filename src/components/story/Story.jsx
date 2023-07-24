@@ -5,6 +5,13 @@ import { DrawerPopup } from '../drawerpopup/DrawerPopup';
 import { AppScreensKeys, ComponentsKeys, DrawerPopupPosition, DrawerPopupSize } from "../../connector/AppConfig";
 import { StoryVideo } from './StoryVideo';
 import { useNavigate } from 'react-router-dom';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import SwiperCore from 'swiper';
+import { Navigation , Pagination} from 'swiper/modules';
+
+
+// install Virtual module
+// SwiperCore.use([Navigation]);
 
 export const Story = () => {
 
@@ -89,6 +96,9 @@ export const Story = () => {
     const parseGetUserDeatilsError = (err) => {
         console.log("parseGetAllStoryError", err);
     }
+
+
+
     // ==============================================================
 
     return (
@@ -100,18 +110,53 @@ export const Story = () => {
                         <svg
                             aria-hidden="true"
                             viewBox="0 0 24 24"
-                           
+
                         >
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"></path>
                         </svg>
                     </div>
-                    {story?.map((row, key) => {
+
+                    <Swiper
+                        slidesPerView={1}
+                        spaceBetween={10}
+                        pagination={{
+                            clickable: true,
+                        }}
+                        breakpoints={{
+                            640: {
+                                slidesPerView: 2,
+                                spaceBetween: 20,
+                            },
+                            768: {
+                                slidesPerView: 4,
+                                spaceBetween: 40,
+                            },
+                            1024: {
+                                slidesPerView: 5,
+                                spaceBetween: 50,
+                            },
+                        }}
+                        modules={[Pagination]}
+                        className="mySwiper"
+                    >
+                        <SwiperSlide>Slide 1</SwiperSlide>
+                        <SwiperSlide>Slide 2</SwiperSlide>
+                        <SwiperSlide>Slide 3</SwiperSlide>
+                        <SwiperSlide>Slide 4</SwiperSlide>
+                        <SwiperSlide>Slide 5</SwiperSlide>
+                        <SwiperSlide>Slide 6</SwiperSlide>
+                        <SwiperSlide>Slide 7</SwiperSlide>
+                        <SwiperSlide>Slide 8</SwiperSlide>
+                        <SwiperSlide>Slide 9</SwiperSlide>
+                    </Swiper>
+
+                    {/* {story?.map((row, key) => {
                         return (
                             <div className="story" key={key} onClick={(e) => onStory(e, row, key)}>
                                 <img src={row?.user?.profile} alt="profile" />
                             </div>
                         )
-                    })}
+                    })} */}
                 </div>
             </div>
 

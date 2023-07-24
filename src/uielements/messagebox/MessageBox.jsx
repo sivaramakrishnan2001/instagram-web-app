@@ -19,6 +19,7 @@ export const MessageBox = (props) => {
             props.onSend(url);
         } else {
             props.onSend(message);
+            setMessage("");
         }
     }
 

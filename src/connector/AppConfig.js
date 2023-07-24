@@ -13,7 +13,11 @@ export const Me = {
     name: "Sivaramakrishnan S",
     role: "MERN Stack Developer",
     skills: [
-        "React.js", "Javascript", "Node.js", "MongoDB", "Express.js", "HTML5", "CSS3", "SCSS", "Git"
+        "React.js", "Javascript", 
+        "Node.js" ,  "MongoDB", 
+        "Express.js", "HTML5", 
+        "CSS3", "SCSS", "Git",
+        "Swagger API" , "REST API"
     ]
 };
 // console.log("🤞", Me);
