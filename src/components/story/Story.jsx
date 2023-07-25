@@ -5,9 +5,10 @@ import { DrawerPopup } from '../drawerpopup/DrawerPopup';
 import { AppScreensKeys, ComponentsKeys, DrawerPopupPosition, DrawerPopupSize } from "../../connector/AppConfig";
 import { StoryVideo } from './StoryVideo';
 import { useNavigate } from 'react-router-dom';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import SwiperCore from 'swiper';
-import { Navigation , Pagination} from 'swiper/modules';
+import { CreateStory } from './CreateStory';
+// import { Swiper, SwiperSlide } from 'swiper/react';
+// import SwiperCore from 'swiper';
+// import { Navigation , Pagination} from 'swiper/modules';
 
 
 // install Virtual module
@@ -21,6 +22,7 @@ export const Story = () => {
     const [selectedrow, setSelectedRow] = useState({});
     const [selectedindex, setSelectedIndex] = useState(0);
     const [user, setUser] = useState({});
+    const [showcreatestory, setShowCreateStory] = useState(false);
 
     // ==============================================================
 
@@ -34,7 +36,7 @@ export const Story = () => {
     // ==============================================================
 
     const onCreateStory = () => {
-
+        setShowCreateStory(true);
     }
 
     const onStory = (e, row, inx) => {
@@ -46,6 +48,8 @@ export const Story = () => {
 
     const onOuterClick = () => {
         setShowStory(false);
+        setShowCreateStory(false);
+
     }
 
     const close = (value) => {
@@ -116,7 +120,7 @@ export const Story = () => {
                         </svg>
                     </div>
 
-                    <Swiper
+                    {/* <Swiper
                         slidesPerView={1}
                         spaceBetween={10}
                         pagination={{
@@ -148,15 +152,15 @@ export const Story = () => {
                         <SwiperSlide>Slide 7</SwiperSlide>
                         <SwiperSlide>Slide 8</SwiperSlide>
                         <SwiperSlide>Slide 9</SwiperSlide>
-                    </Swiper>
+                    </Swiper> */}
 
-                    {/* {story?.map((row, key) => {
+                    {story?.map((row, key) => {
                         return (
                             <div className="story" key={key} onClick={(e) => onStory(e, row, key)}>
                                 <img src={row?.user?.profile} alt="profile" />
                             </div>
                         )
-                    })} */}
+                    })}
                 </div>
             </div>
 
@@ -171,6 +175,13 @@ export const Story = () => {
                 }
                 OuterClick={onOuterClick}
             />
+            }
+
+            {close(showcreatestory) &&
+                <DrawerPopup size={DrawerPopupSize.Default} position={DrawerPopupPosition.Right} isopen={showcreatestory} className="sample"
+                    content={<CreateStory onClose={() => setShowCreateStory(false)} />}
+                    OuterClick={onOuterClick}
+                />
             }
         </React.Fragment>
     )

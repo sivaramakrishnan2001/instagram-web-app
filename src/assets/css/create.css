@@ -18,7 +18,7 @@
     justify-content: center;
 }
 
-.create-post-container>.create-post>.create{
+.create-post-container>.create-post>.create {
     height: 400px;
     width: 400px;
     display: flex;
@@ -28,4 +28,28 @@
     padding: 40px;
     box-shadow: #3c40434d 0px 1px 2px 0px, #3c404326 0px 1px 3px 1px;
 
+}
+
+
+.add-song-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-song-button:hover {
+    background-color: #2980b9;
+}
+
+.add-song-button:focus {
+    outline: none;
+}
+
+.add-song-button:active {
+    background-color: #1e6283;
 }

@@ -17,7 +17,7 @@ export const LeftMenu = (props) => {
             {Components.map((row, key) => {
                 if (row.id !== ComponentsKeys.USERPROFILE) {
                     return (
-                        <div key={key}  className="row" onClick={() => props?.onSelected(row)}>
+                        <div key={key}  className="leftmenu-row" onClick={() => props?.onSelected(row)}>
                             {row?.icon}
                             <div className="title">{row.title}</div>
                         </div>

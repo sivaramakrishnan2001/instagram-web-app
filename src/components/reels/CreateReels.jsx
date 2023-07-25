@@ -19,7 +19,8 @@ export const CreateReels = () => {
 
     const onChangeVideoFile = async (e) => {
         const file = e.target.files[0];
-        const filename = new Date().getTime() + " " + file.name;
+        const filename = '' + new Date().getTime() + " " + file.name;
+        console.log("filename",filename);
         const storage = getStorage();
         const storageRef = ref(storage, `videos/${filename}`);
         uploadBytes(storageRef, file).then((snapshot) => {
@@ -68,10 +69,10 @@ export const CreateReels = () => {
             if (video !== "") {
                 PostRequest(APIsPath.CreateReels + `/?token=${JSON.parse(LocalStorageKeys.token)}`, data, parseCreateReelsResponse, parseCreateReelsError);
             }
-        }else{
+        } else {
             alert("please upload file");
         }
-       
+
     }
 
     const parseCreateReelsResponse = (resObj) => {

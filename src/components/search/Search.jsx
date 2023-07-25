@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GetRequest } from '../../connector/APIsCommunicator';
 import { APIsPath } from '../../connector/APIsPath';
-import { AppScreensKeys, ComponentsKeys } from '../../connector/AppConfig';
+import { AppScreensKeys, ComponentsKeys, SessionStorageKeys } from '../../connector/AppConfig';
 
 
 export const Search = () => {
@@ -50,7 +50,7 @@ export const Search = () => {
     }
 
     // ==============================================================
-    if (!users) return "loading...";
+    if (!users || !myid) return "loading...";
     return (
         <div className='search-user-page'>
             <div className="header">
@@ -59,39 +59,45 @@ export const Search = () => {
             <div className="content">
                 <div className="search-users">
                     {users?.filter((i) => i.name.toLowerCase().trim().indexOf(search.toLowerCase().trim()) !== -1).map((row, key) => {
-                        return (
-                            <div className="row" key={key}>
-                                <div className="logo" onClick={(e) => {
-                                    e.stopPropagation();
-                                    if (myid === row._id) {
-                                        navigate(AppScreensKeys.Home + "/" + ComponentsKeys.PROFILE + "/" + row._id, {
-                                            state: {
-                                                userId: row._id
-                                            }
-                                        });
-                                    } else {
-                                        navigate(AppScreensKeys.Home + "/" + ComponentsKeys.USERPROFILE + "/" + row._id, {
-                                            state: {
-                                                userId: row._id
-                                            }
-                                        });
-                                    }
-
-                                }}>
-                                    <img src={row.profile} alt="profile" />
+                        if (myid !== row._id) {
+                            return (
+                                <div className="row" key={key}>
+                                    <div className="logo" onClick={(e) => {
+                                        e.stopPropagation();
+                                        console.log("myid === row._id",myid === row._id);
+                                        
+                                        if (myid === row._id) {
+                                            sessionStorage.setItem(SessionStorageKeys.ActiveMenu,ComponentsKeys.PROFILE);
+                                            navigate(AppScreensKeys.Home + "/" + ComponentsKeys.PROFILE + "/" + row._id, {
+                                                state: {
+                                                    userId: row._id
+                                                }
+                                            });
+                                        } else {
+                                            sessionStorage.setItem(SessionStorageKeys.ActiveMenu,ComponentsKeys.USERPROFILE);
+                                            navigate(AppScreensKeys.Home + "/" + ComponentsKeys.USERPROFILE + "/" + row._id, {
+                                                state: {
+                                                    userId: row._id
+                                                }
+                                            });
+                                        }
+    
+                                    }}>
+                                        <img src={row.profile} alt="profile" />
+                                    </div>
+                                    <div className="content">
+                                        <div className="id">{row.name}</div>
+                                    </div>
+                                    <div className="end">
+                                        {row.followers?.some((i) => i._id === JSON.parse(localStorage.getItem("user"))?._id) ?
+                                            <div className='btn'>Unfollow</div> :
+                                            <div className='btn'>Follow</div>
+                                        }
+                                    </div>
                                 </div>
-                                <div className="content">
-                                    <div className="id">{row.name}</div>
-                                </div>
-                                <div className="end">
-                                    {row.followers?.some((i) => i._id === JSON.parse(localStorage.getItem("user"))?._id) ?
-                                        <div className='btn'>Unfollow</div> :
-                                        <div className='btn'>Follow</div>
-                                    }
-                                </div>
-                            </div>
-
-                        )
+    
+                            ) 
+                        }
                     })}
                 </div>
             </div>

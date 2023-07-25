@@ -68,6 +68,7 @@ export const ApplicationPage = (props) => {
         else if (selected.id === ComponentsKeys.USERPROFILE) {
             navigator(AppScreensKeys.Home + "/" + ComponentsKeys.USERPROFILE + "/" + JSON.parse(localStorage.getItem("user"))?._id);
         }
+console.log("selected.id",selected.id);
         sessionStorage.setItem(SessionStorageKeys.ActiveMenu, selected.id)
         setReload((ps) => !ps);
 

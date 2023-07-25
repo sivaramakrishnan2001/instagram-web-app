@@ -162,6 +162,8 @@ export const Login2 = () => {
 				}
 				PostRequest(APIsPath.FirebaseAuthentication, reqObj, (resObj) => {
 					if (resObj.status) {
+						localStorage.setItem('token', JSON.stringify(resObj.data.token));
+						localStorage.setItem('user', JSON.stringify(resObj.data.user));
 						navigate(AppScreensKeys.Home, {
 							state: {
 								token: resObj.data.token,

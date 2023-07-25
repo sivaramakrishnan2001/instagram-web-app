@@ -35,7 +35,7 @@
     width: 100px;
 }
 
-.leftmenu>.row {
+.leftmenu>.leftmenu-row {
     width: 85%;
     min-height: 50px;
     padding: 0px 20px;
@@ -45,19 +45,19 @@
     cursor: pointer;
 }
 
-.leftmenu>.row:hover {
+.leftmenu>.leftmenu-row:hover {
     background-color: rgba(228, 231, 231, 0.904);
     border-radius: 10px;
 }
 
-.leftmenu>.row>.icon {
+.leftmenu>.leftmenu-row>.icon {
     display: flex;
     align-items: center;
     width: 30%;
     height: 100%;
 }
 
-.leftmenu>.row>.title {
+.leftmenu>.leftmenu-row>.title {
     width: 70%;
     height: 100%;
     display: flex;

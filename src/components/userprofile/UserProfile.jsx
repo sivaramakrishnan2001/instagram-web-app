@@ -32,7 +32,7 @@ export const UserProfile = (props) => {
     // ==============================================================
 
     useEffect(() => {
-        sessionStorage.setItem(SessionStorageKeys.ActiveMenu,ComponentsKeys.PROFILE);
+        // sessionStorage.setItem(SessionStorageKeys.ActiveMenu,ComponentsKeys.PROFILE);
         setReload((ps) => !ps);
         videoRef.tabs = [
             {
@@ -76,6 +76,11 @@ export const UserProfile = (props) => {
     }, [params.userId]);
 
     useEffect(() => {
+        if (myid === params.userId) {
+            sessionStorage.setItem(SessionStorageKeys.ActiveMenu, ComponentsKeys.PROFILE);
+        } else {
+            sessionStorage.setItem(SessionStorageKeys.ActiveMenu, ComponentsKeys.USERPROFILE);
+        }
         console.log("paramid-----", paramid);
         if (paramid) {
             onGetUser();
