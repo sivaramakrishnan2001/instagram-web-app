@@ -19,7 +19,7 @@ export const Users = () => {
 
     }, []);
 
-    const onFollow = (e,row) => {
+    const onFollow = (e, row) => {
         e.stopPropagation();
         let user = JSON.parse(localStorage.getItem("user"));
         row.followers.push(user);
@@ -28,7 +28,7 @@ export const Users = () => {
         follow(row._id);
     }
 
-    const onUnFollow = (e,row) => {
+    const onUnFollow = (e, row) => {
         e.stopPropagation();
         var user = JSON.parse(localStorage.getItem("user"));
         var users = row.followers.filter((i) => i._id !== user._id);
@@ -103,34 +103,36 @@ export const Users = () => {
                 if (row._id !== myid) {
                     return (
                         <div className="user" style={{ width: "100%", border: "none" }}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                if (myid === row._id) {
-                                    navigate(AppScreensKeys.Home + "/" + ComponentsKeys.PROFILE + "/" + row._id, {
-                                        state: {
-                                            userId: row._id
-                                        }
-                                    });
-                                } else {
-                                    navigate(AppScreensKeys.Home + "/" + ComponentsKeys.USERPROFILE + "/" + row._id, {
-                                        state: {
-                                            userId: row._id
-                                        }
-                                    });
-                                }
-                            }}
+
                             key={key}>
-                            <div className="profile" style={{ width: "30%" }}>
-                                <img src={row.profile} alt="" />
+                            <div className="profile" style={{ width: "25%" }}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (myid === row._id) {
+                                        navigate(AppScreensKeys.Home + "/" + ComponentsKeys.PROFILE + "/" + row._id, {
+                                            state: {
+                                                userId: row._id
+                                            }
+                                        });
+                                    } else {
+                                        navigate(AppScreensKeys.Home + "/" + ComponentsKeys.USERPROFILE + "/" + row._id, {
+                                            state: {
+                                                userId: row._id
+                                            }
+                                        });
+                                    }
+                                }}
+                            >
+                                <img src={row.profile} alt="profile" />
                             </div>
-                            <div className="content" style={{ width: "40%" }}>
-                                <div className="name">{row.name}</div>
+                            <div className="content" style={{ width: "50%" }}>
+                                <div className="name" style={{textOverflow:"none"}}>{row.name}</div>
                             </div>
-                            <div className="follow" style={{ width: "30%" }}>
+                            <div className="follow" style={{ width: "25%" }}>
                                 {followers ?
-                                    <div className='' onClick={(e) => onUnFollow(e,row)}>unfollow</div>
+                                    <div className='' onClick={(e) => onUnFollow(e, row)}>unfollow</div>
                                     :
-                                    <div className='' onClick={(e) => onFollow(e,row)}>follow</div>
+                                    <div className='' onClick={(e) => onFollow(e, row)}>follow</div>
                                 }
                             </div>
                         </div>

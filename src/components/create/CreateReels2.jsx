@@ -5,15 +5,15 @@ import { getDownloadURL, getStorage, ref, uploadBytes, uploadBytesResumable } fr
 import { PostRequest } from '../../connector/APIsCommunicator';
 import { Songs } from '../songs/Songs';
 import { ImageTypes, VideoTypes } from '../../connector/AppConfig';
-import { VideoAndImgFileUpload } from '../../uielements/fileupload/VideoAndImgFileUpload';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
+import { VideoAndImgFileUpload2 } from '../../uielements/fileupload/VideoAndImgFileUpload2';
 
-export const CreatePost = (props) => {
+export const CreateReels2 = (props) => {
 
     const varstore = useRef();
     const [file, setFile] = useState({});
-    const [post, setPost] = useState({ title: "", body: "", photo: "", video: "", song: {}, location: "", save: false, filename: "", filename: "", type: "" });
+    const [post, setPost] = useState({ title: "", body: "", url: "", song: {}, location: "", save: [], filename: "", filename: "", type: "" });
     const [video, setVideo] = useState({
         url: "", song: {}, location: "", filename: "", type: ""
     });
@@ -23,7 +23,7 @@ export const CreatePost = (props) => {
     // =================================================================
 
     useEffect(() => {
-        if (post.video || post.photo && post.filename && post.type) {
+        if (post.url && post.filename && post.type) {
             onCreatePost();
         }
     }, [post]);
@@ -70,7 +70,7 @@ export const CreatePost = (props) => {
         }, () => {
             getDownloadURL(uploadTask.snapshot.ref).then((url) => {
                 console.log("url = ", url, ";");
-                setPost({ ...post, photo: url, filename: filename, type: "image" })
+                setPost({ ...post, url: url, filename: filename, type: "image" })
             })
         })
     }
@@ -87,7 +87,7 @@ export const CreatePost = (props) => {
             // Get the download URL of the uploaded file
             getDownloadURL(storageRef).then((url) => {
                 console.log("Download URL:", url);
-                setPost({ ...post, video: url, filename: filename, type: "video" });
+                setPost({ ...post, url: url, filename: filename, type: "video" });
                 // Perform any additional actions with the URL, such as saving it to a database
             }).catch((error) => {
                 console.error("Error getting download URL:", error);
@@ -106,7 +106,7 @@ export const CreatePost = (props) => {
             body: post
         };
         if (post !== "") {
-            PostRequest(APIsPath.Post + `/?token=${JSON.parse(localStorage.getItem("token"))}`, data, parseCreatePostResponse, parseCreatePostError);
+            PostRequest(APIsPath.CreateReels, data, parseCreatePostResponse, parseCreatePostError);
         }
     }
 
@@ -114,6 +114,7 @@ export const CreatePost = (props) => {
         if (resObj.status) {
             setShowProgress(false);
             alert("updated");
+            props.onClose(true);
         }
         console.log("parseCreatePostResponse", resObj);
     }
@@ -128,55 +129,51 @@ export const CreatePost = (props) => {
     return (
         <React.Fragment>
             {!showsongs ?
-                <div style={{ display: "flex", justifyContent: "", alignItems: "center", flexDirection: "column", backgroundColor: "#fff", width: "100%", height: "100%", overflowY:"scroll"}}>
-                    <div className="header" style={{ display: "flex", justifyContent: "end", alignItems: "center", height: "10%", width: "100%", paddingRight: "20px" }}>
-                        <div className="close" onClick={() => props.onClose && props.onClose()} style={{ height: "15px", width: "15px" }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" style={{ height: "15px", width: "15px" }} viewBox="0 0 16 16">
-                                <g id="cancel-button" transform="translate(-17.666 -17.652)">
-                                    <g id="Group_108" data-name="Group 108" transform="translate(17.666 17.652)">
-                                        <path id="Path_191" data-name="Path 191" d="M128.621,143.836a1.108,1.108,0,0,0,.786.336,1.077,1.077,0,0,0,.785-.336l6.1-6.089,6.1,6.089a1.108,1.108,0,0,0,.786.336,1.077,1.077,0,0,0,.786-.336,1.138,1.138,0,0,0,0-1.588l-6.078-6.07,6.078-6.089a1.138,1.138,0,0,0,0-1.588,1.124,1.124,0,0,0-1.59,0l-6.078,6.089-6.1-6.07a1.123,1.123,0,0,0-1.59,1.588l6.1,6.07-6.078,6.089A1.082,1.082,0,0,0,128.621,143.836Z" transform="translate(-128.279 -128.173)" fill="#383e3a" />
-                                    </g>
-                                </g>
-                            </svg>
+                <div style={{ display: "flex", justifyContent: "", flexDirection: "column", backgroundColor: "#fff", width: "1000px", height: "100%", overflowY: "scroll" }}>
 
-                        </div>
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "column", width: "80%", height: "90%", marginTop: "10px" }}>
-                        <input
-                            ref={(elem) => varstore.title = elem} type="text"
-                            style={{border :"1px solid #c0c0c0"}}
-                            value={post.title}
-                            placeholder='title'
-                            onChange={(e) => setPost({ ...post, title: e.target.value })}
-                            onKeyDown={(e) => e.key === "Enter" ? varstore.body.focus() : ""} />
-                        <VideoAndImgFileUpload onChange={(f) => onChangeFile(f)} />
-                        <input
-                            ref={(elem) => varstore.body = elem}
-                            style={{border :"1px solid #c0c0c0"}}
-                            type="text"
-                            value={post.body}
-                            onChange={(e) => setPost({ ...post, body: e.target.value })}
-                            placeholder='body'
-                        />
+
+                    <div style={{ display: "flex", width: "100%", height: "100%", padding: "20px 20px", columnGap: "30px" }}>
+                        <VideoAndImgFileUpload2 onChange={(f) => onChangeFile(f)} onClose={() => props?.onClose()} />
+
+                        {/* <div className="right" style={{ display: "none", flexDirection: "column", width: "30%", height: "100%" }}>
+                            <input
+                                ref={(elem) => varstore.title = elem} type="text"
+                                style={{ border: "1px solid #c0c0c0" }}
+                                value={post.title}
+                                placeholder='title'
+                                onChange={(e) => setPost({ ...post, title: e.target.value })}
+                                onKeyDown={(e) => e.key === "Enter" ? varstore.body.focus() : ""} />
+                            <input
+                                ref={(elem) => varstore.body = elem}
+                                style={{ border: "1px solid #c0c0c0" }}
+                                type="text"
+                                value={post.body}
+                                onChange={(e) => setPost({ ...post, body: e.target.value })}
+                                placeholder='body'
+                            />
+                           
+                            <Button variant="primary" size="sm" style={{ marginTop: "20px" }} disabled={file.type ? false : true} onClick={() => onUpload()}>
+                                {showprogress ?
+                                    <React.Fragment>
+                                        <Spinner
+                                            as="span"
+                                            animation="grow"
+                                            size="sm"
+                                            role="status"
+                                            aria-hidden="true"
+                                        />
+                                        Loading...
+                                    </React.Fragment>
+                                    : "Upload"
+                                }
+                            </Button>
+                        </div> */}
+
                         {/* <div style={{ display: "flex", alignItems: "center", paddingTop: "20px" }} onClick={() => setShowSongs(true)}>
                     <svg className="icon" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="AddIcon"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>
                     Add Song
                 </div> */}
-                        <Button variant="primary" size="sm" style={{ marginTop: "20px" }} disabled={file.type ? false : true} onClick={() => onUpload()}>
-                            {showprogress ?
-                                <React.Fragment>
-                                    <Spinner
-                                        as="span"
-                                        animation="grow"
-                                        size="sm"
-                                        role="status"
-                                        aria-hidden="true"
-                                    />
-                                    Loading...
-                                </React.Fragment>
-                                : "Upload"
-                            }
-                        </Button>
+
                     </div>
                 </div>
                 : <Songs onSelectedSong={onSelectedSong} />

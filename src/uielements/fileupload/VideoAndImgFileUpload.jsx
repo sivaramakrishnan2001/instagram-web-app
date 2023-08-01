@@ -13,6 +13,7 @@ export const VideoAndImgFileUpload = (props) => {
     const [currentTime, setCurrentTime] = useState(0);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [playbackRate, setPlaybackRate] = useState(1);
+    
 
     useEffect(() => {
         selectedFile && props.onChange && props.onChange(selectedFile);

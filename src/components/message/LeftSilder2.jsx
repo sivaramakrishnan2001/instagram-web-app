@@ -26,9 +26,13 @@ export const LeftSilder2 = (props) => {
             if (id) {
                 props.onClick && props.onClick(selecteduser);
             } else {
-                createConversation();
+                if (selecteduser._id) {
+                    createConversation();
+                }
             }
         }
+
+        props.onClick && props.onClick(selecteduser);
 
     }, [selecteduser]);
 
@@ -110,6 +114,7 @@ export const LeftSilder2 = (props) => {
             {string ?
                 <React.Fragment>
                     {users.map((row, key) => {
+                        console.log("row/////////////", row);
                         if (row._id !== mydestails._id) {
                             return (
                                 <div key={key} className={row._id === selecteduser?._id ? "discussion message-active" : "discussion"} onClick={() => onClickUser(row)}>
@@ -119,7 +124,7 @@ export const LeftSilder2 = (props) => {
                                         <div className="online"></div>
                                     </div>
                                     <div className="desc-contact">
-                                        <p className="name">{mydestails?.name}</p>
+                                        <p className="name">{row?.name}</p>
                                         <p className="message">9 pm at the bar if possible 😳</p>
                                     </div>
                                     <div className="timer">12 sec</div>
@@ -131,20 +136,23 @@ export const LeftSilder2 = (props) => {
                 :
                 <React.Fragment>
                     {conversation.map((row, key) => {
-                        return (
-                            <div key={key} className={row._id === selecteduser?._id ? "discussion message-active" : "discussion"} onClick={() => onClickUser(row)}>
-                                <div className="photo"
-                                    style={{ backgroundImage: `url(${row.profile})` }}
-                                >
-                                    <div className="online"></div>
+                        console.log("`url(${row?.participants[1].user.profile})`", `url(${row?.participants[1].user.profile})`);
+                        if (row?.participants[1].user._id !== mydestails._id) {
+                            return (
+                                <div key={key} className={row._id === selecteduser?._id ? "discussion message-active" : "discussion"} onClick={() => onClickUser(row)}>
+                                    <div className="photo"
+                                        style={{ backgroundImage: `url(${row?.participants[1].user.profile})` }}
+                                    >
+                                        <div className="online"></div>
+                                    </div>
+                                    <div className="desc-contact">
+                                        <p className="name">{row?.participants[1].user.name}</p>
+                                        <p className="message">9 pm at the bar if possible 😳</p>
+                                    </div>
+                                    <div className="timer">12 sec</div>
                                 </div>
-                                <div className="desc-contact">
-                                    <p className="name">{mydestails?.name}</p>
-                                    <p className="message">9 pm at the bar if possible 😳</p>
-                                </div>
-                                <div className="timer">12 sec</div>
-                            </div>
-                        )
+                            )
+                        }
                     })}
                 </React.Fragment>
             }

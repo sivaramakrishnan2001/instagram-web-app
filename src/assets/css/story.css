@@ -173,7 +173,7 @@ storyvideo-wapper>.content>.story>.storys>.story>.video>.range::-webkit-slider-r
     position: absolute;
     z-index: 99;
     top: 5%;
-    width: 50%;
+    width: 25%;
     display: flex;
 }
 

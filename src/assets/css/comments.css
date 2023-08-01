@@ -1,0 +1,54 @@
+.view-comments-wapper {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.view-comments-wapper>.view-comments {
+    height: 90%;
+    width: 100%;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+}
+
+.view-comments-wapper>.view-comments>.messsage-row {
+    min-height: 70px;
+    height: auto;
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.view-comments-wapper>.view-comments>.messsage-row.right {
+    justify-content: end;    
+}
+
+.view-comments-wapper>.view-comments>.messsage-row.left{
+    justify-content: flex-start;
+} 
+
+.view-comments-wapper>.view-comments>.messsage-row>.msg-content{
+    display: flex;
+    align-items: center;
+    column-gap: 5px;
+    max-width: 80%;
+    height: 100%;
+}
+
+.view-comments-wapper>.view-comments>.messsage-row.right>.msg-content{
+    border-radius: 5px;
+    background-color: aqua;
+    padding: 10px 18px;
+}
+
+
+
+.view-comments-wapper>.view-comments>.messsage-row>.msg-content>.content>.text{
+    overflow-wrap: break-word;
+    max-width: 100%;
+}
+

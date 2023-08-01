@@ -2,16 +2,25 @@ import React, { useEffect, useState } from 'react';
 import "./message2.css";
 import { LeftSilder2 } from './LeftSilder2';
 import { APIsPath } from '../../connector/APIsPath';
-import { GetRequest } from '../../connector/APIsCommunicator';
+import { GetRequest, PostRequest } from '../../connector/APIsCommunicator';
+import { Comments } from '../comments/Comments';
 
 export const Message2 = (props) => {
     const [selectedUser, setSelectedUser] = useState(undefined);
     const [messages, setMessages] = useState([]);
     const [socket, setSocket] = useState(null);
     const [arrivalMessage, setArrivalMessage] = useState(null);
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+    const [user, setUser] = useState();
+    const [mydestails, setMyDestails] = useState({});
+    const [reload, setReload] = useState(false);
 
     // ==============================================================
+
+    useEffect(() => {
+        setMyDestails(JSON.parse(localStorage.getItem("user")));
+
+
+    }, []);
 
     useEffect(() => {
         setSocket(props.socket);
@@ -20,9 +29,9 @@ export const Message2 = (props) => {
 
     useEffect(() => {
         console.log("socket", socket);
-        if (!socket || !user) return;
+        if (!socket || !mydestails) return;
 
-        socket.emit('addUser', user._id);
+        socket.emit('addUser', mydestails._id);
 
         socket.on('getUsers', (users) => {
             console.log("users = ", users);
@@ -30,32 +39,51 @@ export const Message2 = (props) => {
         });
 
         socket.on('getMessage', (data) => {
-            console.log("data", data);
+            console.log("data-------->", data);
             let msg = {
                 senderId: data.senderId,
                 message: data.text,
                 myself: false
             }
+            let obj = {
+                text: data.text,
+                imgUrl: '',
+                videoUrl: '',
+                file: '',
+                filename: '',
+                type: '',
+                sender: {
+                    _id: data.senderId
+                }
+            };
+
+            console.log("obj---->", obj);
+            setMessages((prevMessages) => [...prevMessages, obj]);
+
             setArrivalMessage(msg);
-        })
+        });
+
+
 
 
     }, [socket]);
 
+    // useEffect(() => {
+    //     console.log("arrivalMessage0", arrivalMessage, "selectedUser", selectedUser);
+
+    //     if (arrivalMessage) {
+    //         console.log("arrivalMessage", arrivalMessage);
+    //         setMessages((prev) => [...prev, arrivalMessage]);
+
+    //     }
+    // }, [arrivalMessage]);
+
+
+
     useEffect(() => {
-        console.log("arrivalMessage0", arrivalMessage, "selectedUser", selectedUser);
-
-        if (arrivalMessage) {
-            console.log("arrivalMessage", arrivalMessage);
-            setMessages((prev) => [...prev, arrivalMessage]);
-
-        }
-    }, [arrivalMessage]);
-
-    useEffect(() => {
+        console.log("selectedUser", selectedUser);
         if (!selectedUser?._id) return;
         onGetMessages();
-
     }, [selectedUser]);
 
     // ==============================================================
@@ -65,15 +93,69 @@ export const Message2 = (props) => {
         setSelectedUser(row);
     }
 
+    const onComment = (text) => {
+        let obj = {
+            text,
+            imgUrl: '',
+            videoUrl: '',
+            file: '',
+            filename: '',
+            type: '',
+            sender: mydestails,
+            conversationid: selectedUser?._id
+        };
+        messages.push(obj);
+        socket.emit("sendMessage", {
+            senderId: mydestails._id,
+            receiverId: selectedUser?.participants[1]?.user?._id,
+            text: text,
+        });
+        console.log("onSendMessage1");
+
+        if (obj.text && obj.conversationid && obj.sender._id) {
+            console.log("onSendMessage", obj);
+
+            onSendMessage(obj);
+        }
+
+
+        // setReload((ps) => !ps);
+        console.log("onComment obj", obj);
+    }
+
+
+
+    // ==============================================================
+
+    const onSendMessage = (data) => {
+        let obj = {
+            body: data
+        }
+        console.log("data",data);
+        PostRequest(APIsPath.CreateMessages, obj, parseSendMessageResponse, parseSendMessageError);
+    }
+
+    const parseSendMessageResponse = (resObj) => {
+        if (resObj.status) {
+            console.log("resObj", resObj);
+        } else {
+            alert(resObj.message)
+        }
+    }
+
+    const parseSendMessageError = (err) => {
+        alert(err.message);
+    }
+
     // ==============================================================
 
     const onGetMessages = () => {
-        GetRequest(APIsPath.GetConversationAllMessages + "/" + selectedUser?._id, {}, parseGetMessagesResponse, parseGetMessagesError);
+        GetRequest(APIsPath.GetConversationMessages + selectedUser?._id, {}, parseGetMessagesResponse, parseGetMessagesError);
     }
 
     const parseGetMessagesResponse = (resObj) => {
         if (resObj.status) {
-            setMessages(resObj.data);
+            setMessages(resObj.isNew);
         } else {
             alert(resObj.message)
         }
@@ -86,7 +168,7 @@ export const Message2 = (props) => {
     // ==============================================================
     return (
         <div className="container">
-            <div className="row" style={{ display: 'flex' }}>
+            <div className="" style={{ display: 'flex', alignItems: "start" }}>
                 {/* <nav className="menu">
                     <ul className="items">
                         <li className="item">
@@ -109,55 +191,47 @@ export const Message2 = (props) => {
                         </li>
                     </ul>
                 </nav> */}
-                <LeftSilder2 onClick={onSelectUser} />
+                <LeftSilder2 onClick={(row) => onSelectUser(row)} />
                 <section className="chat" style={{ display: 'flex', flexDirection: "column", width: "100%" }}>
                     <div className="header-chat">
                         <i className="icon fa fa-user-o" aria-hidden="true"></i>
-                        <p className="name">{selectedUser?.name}</p>
+                        <p className="name">{selectedUser && selectedUser?.participants && selectedUser?.participants[1]?.user?.name}</p>
                         <i className="icon clickable fa fa-ellipsis-h right" aria-hidden="true"></i>
                     </div>
-                    <div className="messages-chat">
-                        <div className="message">
-                            <div className="photo"
-                            // style="background-image: url(https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80);"
-                            >
-                                <div className="online"></div>
-                            </div>
-                            <p className="text"> Hi, how are you ? </p>
-                        </div>
-                        <div className="message text-only">
-                            <p className="text"> What are you doing tonight ? Want to go take a drink ?</p>
-                        </div>
-                        <p className="time"> 14h58</p>
-                        <div className="message text-only">
-                            <div className="response">
-                                <p className="text"> Hey Megan ! It's been a while 😃</p>
-                            </div>
-                        </div>
-                        <div className="message text-only">
-                            <div className="response">
-                                <p className="text"> When can we meet ?</p>
-                            </div>
-                        </div>
-                        <p className="response-time time"> 15h04</p>
-                        <div className="message">
-                            <div className="photo"
-                            // style="background-image: url(https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80);"
-                            >
-                                <div className="online"></div>
-                            </div>
-                            <p className="text"> 9 pm at the bar if possible 😳</p>
-                        </div>
-                        <p className="time"> 15h09</p>
+                    <div className="messages-chat" style={{ overflowY: "scroll", minHeight: "400px", height: "400px" }}>
+
+                        {messages.map((row, key) => {
+                            if (row.sender?._id === mydestails._id) {
+                                return (
+                                    <React.Fragment key={key}>
+                                        <div className="message text-only" key={key}>
+                                            <div className="response">
+                                                <p className="text"> {row.text}</p>
+                                            </div>
+                                            {/* <p className="text"> {row.text}</p> */}
+                                        </div>
+                                    </React.Fragment>
+                                )
+                            } else {
+                                return (
+                                    <React.Fragment key={key}>
+                                        <div className="message" key={key}>
+                                            <div className="photo"
+                                                style={{ backgroundImage: `url(${row.sender.profile})` }}
+                                            >
+                                                <div className="online"></div>
+                                            </div>
+                                            <p className="text">{row.text}</p>
+                                        </div>
+                                    </React.Fragment>
+                                )
+                            }
+
+                        })}
                     </div>
 
-                    <div className="footer-chat">
-                        <i className="icon fa fa-smile-o clickable"
-                            // style="font-size:25pt;" 
-                            style={{ fontSize: "25pt" }}
-                            aria-hidden="true"></i>
-                        <input type="text" className="write-message" placeholder="Type your message here"></input>
-                        <i className="icon send fa fa-paper-plane-o clickable" aria-hidden="true"></i>
+                    <div className="chat-footer">
+                        <Comments profile={mydestails.profile} onChange={(message) => onComment(message)} />
                     </div>
                 </section>
             </div>

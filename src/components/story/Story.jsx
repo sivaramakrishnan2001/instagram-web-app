@@ -110,7 +110,7 @@ export const Story = () => {
             <div className='story-container'>
                 <div className='story-content'>
                     <div className="story add" onClick={(e) => onCreateStory()}>
-                        <img src={user.profile} alt="profile" />
+                        <img src={user?.profile} alt="profile" />
                         <svg
                             aria-hidden="true"
                             viewBox="0 0 24 24"

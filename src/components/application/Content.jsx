@@ -23,11 +23,11 @@ export const Content = props => {
     // ==============================================================
 
     useEffect(() => {
-        // const newstocket = io('http://localhost:2001')
-        // setSocket(newstocket);
-        // return () => {
-        //     newstocket.disconnect();
-        // }
+        const newstocket = io('http://localhost:2001')
+        setSocket(newstocket);
+        return () => {
+            newstocket.disconnect();
+        }
     }, []);
 
     useEffect(() => {

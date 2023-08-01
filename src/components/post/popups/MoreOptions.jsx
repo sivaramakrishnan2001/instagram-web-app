@@ -34,7 +34,7 @@ export const MoreOptions = props => {
 
     const handleCopy = (id) => {
         const textToCopy = AppScreensKeys.Home + "/" + ComponentsKeys.POSTS + "/" + props.selectedpost._id;
-        console.log("textToCopy",textToCopy);
+        console.log("textToCopy", textToCopy);
         // Create a temporary textarea element
         const textarea = document.createElement('textarea');
         textarea.value = textToCopy;
@@ -62,7 +62,11 @@ export const MoreOptions = props => {
         deleteObject(desertRef).then((resObj) => {
             // File deleted successfully
             console.log("resObj", resObj);
-            onDeletePost();
+            if (props.type === "video") {
+                onDeleteReels();
+            } else {
+                onDeletePost();
+            }
         }).catch((error) => {
             console.log("error", error);
             // Uh-oh, an error occurred!
@@ -93,11 +97,35 @@ export const MoreOptions = props => {
     }
 
     // ==================================================================
+    // delete reels
+
+    const onDeleteReels = () => {
+        var reqObj = {
+            body: {
+                reelsid: props.selectedpost._id,
+            }
+        };
+        console.log("reqObj", reqObj);
+        DeleteRequest(APIsPath.DeleteReels, reqObj, parseDeleteReelsResponse, parseDeleteReelsError);
+    }
+
+    const parseDeleteReelsResponse = (resObj) => {
+        if (resObj.status) {
+            alert(resObj.message)
+        }
+        console.log("parseDeleteReelsResponse", resObj);
+    }
+
+    const parseDeleteReelsError = (err) => {
+        console.log("parseDeleteReelsError", err);
+    }
+
+    // ==================================================================
 
     return (
         <div className='more-options-container'  >
             <div className="more-options" tabIndex={1} onClick={(e) => e.stopPropagation()}>
-            {isCopied && <span>Text copied to clipboard!</span>}
+                {isCopied && <span>Text copied to clipboard!</span>}
                 {options?.map((row, key) => {
                     return (
                         <div className="option" key={key} onClick={() => onOptionClick(row)}>

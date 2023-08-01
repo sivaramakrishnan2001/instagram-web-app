@@ -28,13 +28,13 @@
 .search-user-page>.content>.search-users {
     display: flex;
     flex-direction: column;
-    width: 50%;
+    width: 49%;
     border: 1px solid gainsboro;
     padding: 20px 0px ;
     row-gap: 5px;
 }
 
-.search-user-page>.content>.search-users>.row {
+.search-user-page>.content>.search-users>.user-row {
     display: flex;
     align-items: center;
     height: 70px;
@@ -42,7 +42,7 @@
     padding: 10px;
 }
 
-.search-user-page>.content>.search-users>.row>.logo {
+.search-user-page>.content>.search-users>.user-row>.logo {
     height: 100%;
     width: 25%;
     display: flex;
@@ -50,16 +50,16 @@
     justify-content: center;
 }
 
-.search-user-page>.content>.search-users>.row>.logo>img {
+.search-user-page>.content>.search-users>.user-row>.logo>img {
     height: 60px;
     width: 60px;
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     border-radius: 50%;
 }
 
-.search-user-page>.content>.search-users>.row>.content {
+.search-user-page>.content>.search-users>.user-row>.content {
     width: 50%;
 }
-.search-user-page>.content>.search-users>.row>.end{
+.search-user-page>.content>.search-users>.user-row>.end{
     width: 25%;
 }

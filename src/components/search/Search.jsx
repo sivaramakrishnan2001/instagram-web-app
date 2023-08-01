@@ -61,7 +61,7 @@ export const Search = () => {
                     {users?.filter((i) => i.name.toLowerCase().trim().indexOf(search.toLowerCase().trim()) !== -1).map((row, key) => {
                         if (myid !== row._id) {
                             return (
-                                <div className="row" key={key}>
+                                <div className="user-row" key={key}>
                                     <div className="logo" onClick={(e) => {
                                         e.stopPropagation();
                                         console.log("myid === row._id",myid === row._id);

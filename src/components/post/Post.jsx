@@ -138,6 +138,7 @@ export const Post = (props) => {
     };
 
     const onComment = (meg, row) => {
+        meg.trimStart().trimEnd();
         row.comments.push(
             {
                 text: meg,
@@ -287,31 +288,24 @@ export const Post = (props) => {
 
     return (
         <React.Fragment>
-            <div className="all-posts" ref={varstore} >
-
-                <Card style={{ width: '100%', height: "130px", boxShadow: " rgba(0, 0, 0, 0.1) 0px 1px 2px 0px", marginTop: "10px" }} onClick={()=>setShowCreatePost(true)}>
-                    {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
+            <div className="all-posts" style={{ width: "450px" }}>
+                <Card className='' style={{ width: '100%', height: "130px", boxShadow: " rgba(0, 0, 0, 0.1) 0px 1px 2px 0px", marginTop: "10px" }} onClick={() => setShowCreatePost(true)}>
                     <Card.Body style={{ display: "flex", alignItems: "center", padding: "0px", margin: "0px", justifyContent: "center" }}>
                         <svg aria-hidden="true" style={{ height: "50px", width: "50px", fill: "gainsboro" }} viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"></path></svg>
-                        {/* <Card.Title>Card Title</Card.Title> */}
-                        {/* <Card.Text>
-                            Some quick example text to build on the card title and make up the
-                            bulk of the card's content.
-                        </Card.Text>
-                        <Button variant="primary">Go somewhere</Button> */}
                     </Card.Body>
                 </Card>
+            </div>
+
+            <div className="all-posts" ref={varstore} >
 
                 {posts?.map((row, key) => {
                     var liked = row.likes.filter((f) => f._id === mydetails._id);
                     var save = row.save.some((i) => i === mydetails._id);
                     var follower = row.likes.some((i) => {
                         return i.followers.some((i) => {
-                            console.log("i._id === mydetails._id", i._id, mydetails._id);
                             return i._id === mydetails._id
                         })
                     });
-                    console.log("follower", follower);
 
                     return (
                         <div className={'post ' + key} key={key} >
@@ -385,36 +379,44 @@ export const Post = (props) => {
                             <audio controls id="beep" >
                                 <source src={row.song?.song} type="audio/mp3" />
                             </audio>
-                            <div className="post-content"
+                            <div className="post-content" style={{cursor:"pointer"}}
                                 onClick={(e) => {
+                                    e.stopPropagation();
                                     row.audioplay = !row.audioplay;
-                                    if (row.audioplay == true) {
-                                        varstore.videoRef.play();
+                                    setReload(ps => !ps);
+
+                                    if (row.audioplay === true) {
+                                        console.log("true-->");
+
                                         for (let index = 0; index < posts.length; index++) {
-                                            if (row.type && row.type === "video") {
+                                            console.log("video ->",row?.type);
+                                            if (row?.type === "video") {
                                                 if (key !== index) {
                                                     varstore?.current?.children[index]?.children[3]?.children[1]?.pause();
                                                     varstore.current.children[index].children[2].pause();
                                                     posts[index].audioplay = false;
+                                                } else {
+                                                    if (row.audioplay === false) {
+                                                        varstore?.current?.children[index]?.children[3]?.children[1]?.pause()
+                                                    } else {
+                                                        varstore?.current?.children[index]?.children[3]?.children[1]?.play()
+                                                    }
                                                 }
                                             } else {
                                                 varstore.current.children[index].children[2].pause();
                                                 posts[index].audioplay = false;
                                             }
                                         }
+                                        // varstore.videoRef.play();
+                                    }else{
+                                        console.log("false-->");
+                                          // varstore.videoRef.pause();
+                                        //   console.log("varstore?.current?.children[key]?.children[3]?.children[1]",varstore?.current?.children[key].children[3].children[0].pause());
+                                          varstore?.current?.children[key]?.children[3]?.children[0]?.pause();
                                     }
-                                    if (row.audioplay == false) {
-                                        varstore.videoRef.pause();
-                                    }
-
-                                    setReload((ps) => !ps);
-
-                                    setReload((ps) => !ps);
-
-
                                 }}
                             >
-                                {!row.audioplay && row?.type === "video" && <div className="pause"></div>}
+                                {!row.audioplay && row?.type === "video" ? <div className="pause"></div> : ""}
                                 {row?.type === "video" ?
                                     <video
                                         className='video'
@@ -490,11 +492,7 @@ export const Post = (props) => {
                                     <div className="liked-users">
                                         {row.likes.map((l, lk) => {
                                             if (l._id === mydetails._id) {
-                                                return (
-                                                    <div className="user" key={lk}>
-
-                                                    </div>
-                                                )
+                                                return;
                                             } else {
                                                 return (
                                                     <div className="user" key={lk}>
@@ -520,13 +518,22 @@ export const Post = (props) => {
                                                 <div className={rw.postedBy._id === mydetails._id ? 'message replay' : 'message'} key={key}
                                                 >
                                                     <div className="message">
-                                                        <div className="logo">
-                                                            <img src={rw.postedBy.profile} alt="profile" />
-                                                        </div>
-                                                        <div className="content">
-                                                            <div className="id">{rw.postedBy.name}</div>
-                                                            <div className="text">{rw.text}</div>
-                                                        </div>
+                                                        {rw.postedBy._id === mydetails._id === false ?
+                                                            <React.Fragment>
+                                                                <div className="logo" style={{ marginLeft: "5px" }}>
+                                                                    <img src={rw.postedBy.profile} alt="profile" />
+                                                                </div>
+                                                                <div className="content">
+                                                                    <div className="id">{rw.postedBy.name}</div>
+                                                                    <div className="text">{rw.text}</div>
+                                                                </div>
+                                                            </React.Fragment>
+                                                            :
+                                                            <div className="content" style={{ marginRight: "10px", borderRadius: "5px", padding: "0px 10px", cursor: "pointer", background: "#7bc3ff", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "30px", minWidth: "40px" }}>
+                                                                {/* <div className="id">{rw.postedBy.name}</div> */}
+                                                                <div className="text" style={{ textAlign: "center" }}>{rw.text}</div>
+                                                            </div>
+                                                        }
                                                     </div>
                                                 </div>
                                             )

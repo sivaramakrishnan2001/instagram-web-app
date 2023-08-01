@@ -1,8 +1,8 @@
 
 export const APIsPath = {
 
-    // BaseUrl: 'http://localhost:2000',
-    BaseUrl: process.env.REACT_APP_BASE_URL,
+    BaseUrl: 'http://localhost:2000',
+    // BaseUrl: process.env.REACT_APP_BASE_URL,
 
 
     // Authentication
@@ -22,10 +22,14 @@ export const APIsPath = {
     GetMessages: '/getMessages',
 
     // chat2
-    GetAllConversationUser: '/user/getAllConversation',
+    GetAllConversationUser: '/user/Conversation/getAll',
     GetConversationAllMessages: '/user/getConversationMessages',
-    CreateConversation:'/user/createConversation',
+    CreateConversation: '/user/createConversation',
 
+    // message 
+    getAllMessages: '/getAllMessages',
+    GetConversationMessages: '/user/getConversationMessages/',
+    CreateMessages: '/user/createMessages',
 
     // post
     AllPost: '/allpost',
@@ -53,6 +57,10 @@ export const APIsPath = {
     CreateReels: "/post/createReels",
     UpdateReels: "/post/updateReels",
     DeleteReels: "/post/deleteReels",
+
+    LikeReels: '/post/likeReels',
+    UnLikeReels: '/post/unlikeReels',
+    CommentReels: '/post/commentReels',
 
     // stickyNotes
 

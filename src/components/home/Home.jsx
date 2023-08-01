@@ -14,8 +14,10 @@ export const Home = props => {
       {/* <Test /> */}
       <Story />
       {/* <StickyNotes /> */}
-      <div className="content" style={{display:"flex"}}>
-        <Post />
+      <div className="content" style={{ display: "flex" }}>
+        <div className="div">
+          <Post />
+        </div>
         <Users />
       </div>
     </div>
