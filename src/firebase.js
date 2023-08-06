@@ -65,6 +65,34 @@ export const getTokenFromFirebase = async () => {
 //     });
 
 
+// function requestPermission() {
+//   console.log("Requesting permission...");
+//   Notification.requestPermission().then((permission) => {
+//     if (permission === "granted") {
+//       console.log("Notification permission granted.");
+//       const app = initializeApp(firebaseConfig);
+
+//       const messaging = getMessaging(app);
+//       console.log("messaging", messaging);
+//       getToken(messaging, {
+//         vapidKey:
+//           "BI5jjT3X4q2l1tgWAY1D9oi7pfbX2lFAyT7r7Bxup4nBz37eG1kw6MVozb3-oguRYTUcvnE7-NWkqjQE-SQqAx8",
+//       }).then((currentToken) => {
+//         if (currentToken) {
+//           console.log("currentToken: ", currentToken);
+//         } else {
+//           console.log("Can not get token");
+//         }
+//       });
+//     } else {
+//       console.log("Do not have permission!");
+//     }
+//   });
+// }
+
+// requestPermission();
+
+
 function requestPermission() {
   console.log("Requesting permission...");
   Notification.requestPermission().then((permission) => {
@@ -73,7 +101,6 @@ function requestPermission() {
       const app = initializeApp(firebaseConfig);
 
       const messaging = getMessaging(app);
-      console.log("messaging", messaging);
       getToken(messaging, {
         vapidKey:
           "BI5jjT3X4q2l1tgWAY1D9oi7pfbX2lFAyT7r7Bxup4nBz37eG1kw6MVozb3-oguRYTUcvnE7-NWkqjQE-SQqAx8",

@@ -118,11 +118,13 @@ export const LeftSilder2 = (props) => {
                         if (row._id !== mydestails._id) {
                             return (
                                 <div key={key} className={row._id === selecteduser?._id ? "discussion message-active" : "discussion"} onClick={() => onClickUser(row)}>
-                                    <div className="photo"
-                                        style={{ backgroundImage: `url(${row.profile})` }}
+                                    {/* <div className="photo"
+                                        style={{ backgroundImage: `url(${row?.participants[1].user.profile})` }}
                                     >
                                         <div className="online"></div>
-                                    </div>
+                                    </div> */}
+                                    <img className='photo' src={row?.participants[1].user.profile} alt="profile" />
+
                                     <div className="desc-contact">
                                         <p className="name">{row?.name}</p>
                                         <p className="message">9 pm at the bar if possible 😳</p>
@@ -140,14 +142,15 @@ export const LeftSilder2 = (props) => {
                         if (row?.participants[1].user._id !== mydestails._id) {
                             return (
                                 <div key={key} className={row._id === selecteduser?._id ? "discussion message-active" : "discussion"} onClick={() => onClickUser(row)}>
-                                    <div className="photo"
+                                    {/* <div className="photo"
                                         style={{ backgroundImage: `url(${row?.participants[1].user.profile})` }}
                                     >
                                         <div className="online"></div>
-                                    </div>
+                                    </div> */}
+                                    <img className='photo' src={row?.participants[1].user.profile} alt="profile" />
                                     <div className="desc-contact">
                                         <p className="name">{row?.participants[1].user.name}</p>
-                                        <p className="message">9 pm at the bar if possible 😳</p>
+                                        <p className="message"> {row?.lastmessage?.text}</p>
                                     </div>
                                     <div className="timer">12 sec</div>
                                 </div>

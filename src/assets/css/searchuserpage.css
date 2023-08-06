@@ -1,5 +1,5 @@
 .search-user-page {
-    width: 100%;
+    width: 700px;
     height: 100%;
     display: flex;
     padding: 20px;
@@ -9,29 +9,33 @@
 
 .search-user-page>.header {
     width: 100%;
-    height: 50px;
+    height: 54px;
     display: flex;
     align-items: center;
 }
 
 .search-user-page>.header>input {
-    width: 50%;
-    height: 50px;
+    width: 100%;
+    height: 54px;
+    border: 1px solid gainsboro;
+    outline: none;
+    border-radius: 10px;
 }
 
 .search-user-page>.content {
     width: 100%;
     height: calc(100% - 80px);
-    padding-left: 6px;
 }
 
 .search-user-page>.content>.search-users {
     display: flex;
     flex-direction: column;
-    width: 49%;
     border: 1px solid gainsboro;
     padding: 20px 0px ;
     row-gap: 5px;
+    width: 100%;
+    border-radius: 10px;
+
 }
 
 .search-user-page>.content>.search-users>.user-row {

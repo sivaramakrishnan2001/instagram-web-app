@@ -31,7 +31,7 @@ export const ViewComments = (props) => {
         }
         setMessage(obj);
         setComments([...comments, obj]);
-        // onCreateCommenMessage(meg);
+        onCreateCommenMessage(obj.text);
     }
 
     // ==============================================================
@@ -65,22 +65,11 @@ export const ViewComments = (props) => {
 
 
             <div className="view-comments">
-                <div className="messsage-row">
-                    <div className="msg-content">
-                        <div className="profile">
-                            <img src="" />
-                        </div>
-                        <div className="content">
-                            <div className="msg">
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
+               
                 {comments.map((row, key) => {
                     if (row.postedBy._id === mydetails._id) {
                         return (
-                            <div className="messsage-row right" key={key}>
+                            <div className="messsage-row right" style={{background:"#fff"}} key={key}>
                                 <div className="msg-content">
                                     <div className="content">
                                         <div className="text ow">
@@ -91,18 +80,20 @@ export const ViewComments = (props) => {
                             </div>
                         )
                     } else {
-                        <div className={row.postedBy._id === mydetails._id ? "messsage-row right" : "messsage-row left"} key={key}>
-                            <div className="msg-content">
-                                <div className="profile">
-                                    <img src={row.postedBy.profile} />
-                                </div>
-                                <div className="content">
-                                    <div className="text ow" >
-                                        {row.text}
+                        return (
+                            <div className={row.postedBy._id === mydetails._id ? "messsage-row right" : "messsage-row left"} key={key}>
+                                <div className="msg-content" style={{background:"#fff"}}>
+                                    <div className="profile">
+                                        <img src={row.postedBy.profile} />
+                                    </div>
+                                    <div className="content">
+                                        <div className="text ow" >
+                                            {row.text}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        )
                     }
 
                 })}

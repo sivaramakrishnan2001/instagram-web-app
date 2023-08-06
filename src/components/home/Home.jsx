@@ -18,7 +18,9 @@ export const Home = props => {
         <div className="div">
           <Post />
         </div>
-        <Users />
+        <div className="suggested-for-user">
+          <Users />
+        </div>
       </div>
     </div>
   )

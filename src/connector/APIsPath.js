@@ -1,8 +1,8 @@
 
 export const APIsPath = {
 
-    BaseUrl: 'http://localhost:2000',
-    // BaseUrl: process.env.REACT_APP_BASE_URL,
+    // BaseUrl: 'http://localhost:2000',
+    BaseUrl: process.env.REACT_APP_BASE_URL,
 
 
     // Authentication
@@ -30,6 +30,9 @@ export const APIsPath = {
     getAllMessages: '/getAllMessages',
     GetConversationMessages: '/user/getConversationMessages/',
     CreateMessages: '/user/createMessages',
+
+    SendReels: "/post/sendReels",
+    SendPost: "/post/sendPost",
 
     // post
     AllPost: '/allpost',

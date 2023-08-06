@@ -2,40 +2,87 @@ import React, { useEffect, useState } from 'react';
 import { Content } from '../../components/application/Content';
 import { LeftMenu } from '../../components/application/LeftMenu';
 import { AppScreensKeys, Components, ComponentsKeys, LocalStorageKeys, SessionStorageKeys } from '../../connector/AppConfig';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { GetRequest } from '../../connector/APIsCommunicator';
 import { APIsPath } from '../../connector/APIsPath';
 
 export const ApplicationPage = (props) => {
 
     const params = useParams();
+    const location = useLocation();
+
     const navigator = useNavigate();
     const [selected, setSelected] = useState(Components[0]);
     const [mydetails, setMyDetails] = useState({});
     const [reload, setReload] = useState(false);
+    const [selectleftmenu, setSelectLeftMenu] = useState({});
 
     // ==============================================================
 
     useEffect(() => {
+        console.log("params.userId)--test->", params.userId);
         setMyDetails(JSON.parse(localStorage.getItem("user")));
         if (mydetails._id) {
             getProfileApi();
         }
-        if (sessionStorage.getItem(SessionStorageKeys.ActiveMenu)) {
-            setSelected(Components.filter((i) => i.id === sessionStorage.getItem(SessionStorageKeys.ActiveMenu))[0])
+
+        console.log("s---location", location);
+        if (params.userId) {
+            if (location.pathname === AppScreensKeys.Home + "/" + ComponentsKeys.USERPROFILE + "/" + params.userId) {
+                navigator(AppScreensKeys.Home + "/" + ComponentsKeys.USERPROFILE + "/" + params.userId);
+            }
+            console.log("userId=======");
+
+            // setSelected(obj);
+            setSelectLeftMenu(Components.filter((i) => i.id === ComponentsKeys.USERPROFILE)[0]);
+
+            // window.location.replace(AppScreensKeys.Home + "/" + ComponentsKeys.USERPROFILE + "/" + params.userId)
         }
+
+        if (sessionStorage.getItem(SessionStorageKeys.ActiveMenu)) {
+            let id = sessionStorage.getItem(SessionStorageKeys.ActiveMenu)[0]?.id;
+            let obj = Components.filter((i) => i.id === id);
+            setSelectLeftMenu(obj);
+            // if (obj.id === "userprofile") {
+            // setSelected();
+            // navigator(AppScreensKeys.Home + "/" + ComponentsKeys.USERPROFILE + "/" + params.userId);
+            // }
+        }
+
+
     }, []);
 
     useEffect(() => {
         console.log("params", params);
+        let obj;
+
         if (params.userId) {
-            if (JSON.parse(localStorage.getItem("user"))?._id === params.userId) {
-                setSelected(Components.filter((i) => i.id === ComponentsKeys.PROFILE)[0]);
-            } else {
-                setSelected(Components.filter((i) => i.id === ComponentsKeys.USERPROFILE)[0]);
+            if (params.userId === mydetails._id) {
+                console.log("true-->");
+                obj = Components.filter((i) => i.id === ComponentsKeys.PROFILE)[0];
+                obj.userid = params.userId;
+                // setSelected(obj);
+                setSelectLeftMenu(obj);
+
+            }
+            else {
+                console.log("fasle-->");
+
+                obj = Components.filter((i) => i.id === ComponentsKeys.USERPROFILE)[0];
+                obj.userid = params.userId;
+
+                // setSelected(obj);
+                setSelectLeftMenu(obj);
             }
         }
-        setReload(ps => !ps);
+        // if (params.userId) {
+        //     if (JSON.parse(localStorage.getItem("user"))?._id === params.userId) {
+        //         setSelected(Components.filter((i) => i.id === ComponentsKeys.PROFILE)[0]);
+        //     } else {
+        //         setSelected(Components.filter((i) => i.id === ComponentsKeys.USERPROFILE)[0]);
+        //     }
+        // }
+        // setReload(ps => !ps);
 
     }, [params.userId]);
 
@@ -66,9 +113,9 @@ export const ApplicationPage = (props) => {
             navigator(AppScreensKeys.Home + "/" + ComponentsKeys.PROFILE + "/" + JSON.parse(localStorage.getItem("user"))?._id);
         }
         else if (selected.id === ComponentsKeys.USERPROFILE) {
-            navigator(AppScreensKeys.Home + "/" + ComponentsKeys.USERPROFILE + "/" + JSON.parse(localStorage.getItem("user"))?._id);
+            // navigator(AppScreensKeys.Home + "/" + ComponentsKeys.USERPROFILE + "/" + JSON.parse(localStorage.getItem("user"))?._id);
         }
-console.log("selected.id",selected.id);
+        console.log("selected.id", selected.id);
         sessionStorage.setItem(SessionStorageKeys.ActiveMenu, selected.id)
         setReload((ps) => !ps);
 
@@ -99,7 +146,8 @@ console.log("selected.id",selected.id);
 
     return (
         <div className='application-page'>
-            <LeftMenu onSelected={(row) => onSelected(row)} />
+
+            <LeftMenu onSelected={(row) => onSelected(row)} selected={selectleftmenu} />
             <Content selected={selected} />
         </div>
     )

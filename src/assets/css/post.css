@@ -5,6 +5,8 @@
     width: 450px;
     height: auto;
     min-height: 400px;
+    min-width: 450px;
+    max-width: 450px;
     position: relative;
     user-select: none;
 }

@@ -4,6 +4,7 @@ import { LeftSilder2 } from './LeftSilder2';
 import { APIsPath } from '../../connector/APIsPath';
 import { GetRequest, PostRequest } from '../../connector/APIsCommunicator';
 import { Comments } from '../comments/Comments';
+import { CustomRangeVideo } from '../customrange/CustomRange';
 
 export const Message2 = (props) => {
     const [selectedUser, setSelectedUser] = useState(undefined);
@@ -104,7 +105,19 @@ export const Message2 = (props) => {
             sender: mydestails,
             conversationid: selectedUser?._id
         };
-        messages.push(obj);
+        let obj1 = {
+            sender: mydestails,
+            conversationid: selectedUser,
+            content: {
+                text,
+                imgUrl: '',
+                videoUrl: '',
+                file: '',
+                filename: '',
+                type: '',
+            }
+        }
+        messages.push(obj1);
         socket.emit("sendMessage", {
             senderId: mydestails._id,
             receiverId: selectedUser?.participants[1]?.user?._id,
@@ -128,10 +141,11 @@ export const Message2 = (props) => {
     // ==============================================================
 
     const onSendMessage = (data) => {
+        data.sender = undefined
         let obj = {
             body: data
         }
-        console.log("data",data);
+        console.log("data", data);
         PostRequest(APIsPath.CreateMessages, obj, parseSendMessageResponse, parseSendMessageError);
     }
 
@@ -155,7 +169,7 @@ export const Message2 = (props) => {
 
     const parseGetMessagesResponse = (resObj) => {
         if (resObj.status) {
-            setMessages(resObj.isNew);
+            setMessages(resObj.data);
         } else {
             alert(resObj.message)
         }
@@ -198,31 +212,45 @@ export const Message2 = (props) => {
                         <p className="name">{selectedUser && selectedUser?.participants && selectedUser?.participants[1]?.user?.name}</p>
                         <i className="icon clickable fa fa-ellipsis-h right" aria-hidden="true"></i>
                     </div>
-                    <div className="messages-chat" style={{ overflowY: "scroll", minHeight: "400px", height: "400px" }}>
+                    <div className="messages-chat" style={{ overflowY: "scroll", minHeight: "400px", height: "550px" }}>
 
                         {messages.map((row, key) => {
                             if (row.sender?._id === mydestails._id) {
                                 return (
                                     <React.Fragment key={key}>
-                                        <div className="message text-only" key={key}>
-                                            <div className="response">
-                                                <p className="text"> {row.text}</p>
+                                        {row.reels ?
+                                            <div className="message right" style={{ justifyContent: "end" }}>
+                                                <div className="all-reels" >
+                                                    <CustomRangeVideo row={row.reels} type="reels" />
+                                                </div>
                                             </div>
-                                            {/* <p className="text"> {row.text}</p> */}
-                                        </div>
+                                            :
+                                            <div className="message text-only left" key={key}>
+                                                <div className="response">
+                                                    <p className="text"> {row?.content?.text}</p>
+                                                </div>
+                                                {/* <p className="text"> {row.text}</p> */}
+                                            </div>
+                                        }
+
                                     </React.Fragment>
                                 )
                             } else {
                                 return (
                                     <React.Fragment key={key}>
-                                        <div className="message" key={key}>
-                                            <div className="photo"
-                                                style={{ backgroundImage: `url(${row.sender.profile})` }}
-                                            >
-                                                <div className="online"></div>
+                                        {row.reels ?
+                                            <div className="all-post all-reels" style={{ justifyContent: "start" }}>
+                                                <CustomRangeVideo row={row.reels} type="reels" />
                                             </div>
-                                            <p className="text">{row.text}</p>
-                                        </div>
+                                            :
+                                            <div className="message" key={key}>
+                                                <div className="photo"
+                                                    style={{ backgroundImage: `url(${row.sender.profile})` }}
+                                                >
+                                                    <div className="online"></div>
+                                                </div>
+                                                <p className="text">{row?.content?.text}</p>
+                                            </div>}
                                     </React.Fragment>
                                 )
                             }
@@ -230,7 +258,7 @@ export const Message2 = (props) => {
                         })}
                     </div>
 
-                    <div className="chat-footer">
+                    <div className="chat-footer" >
                         <Comments profile={mydestails.profile} onChange={(message) => onComment(message)} />
                     </div>
                 </section>

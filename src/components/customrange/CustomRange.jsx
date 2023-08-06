@@ -5,6 +5,7 @@ import { DrawerPopup } from '../drawerpopup/DrawerPopup';
 import { MoreOptions } from '../post/popups/MoreOptions';
 import { DrawerPopupPosition, DrawerPopupSize } from '../../connector/AppConfig';
 import { ViewComments } from '../comments/ViewComments';
+import { Shares } from '../shares/Shares';
 
 export const CustomRangeVideo = (props) => {
 
@@ -18,6 +19,7 @@ export const CustomRangeVideo = (props) => {
     const [showmoreoptions, setShowMoreoptions] = useState(false);
     const [showcomments, setShowComments] = useState(false);
     const [selectedpost, setSelectedPost] = useState(undefined);
+    const [showshares, setShowShares] = useState(false);
     const [rload, setRload] = useState(false);
 
     // ==============================================================
@@ -100,6 +102,12 @@ export const CustomRangeVideo = (props) => {
         setComments(v);
         setRload(ps => !ps);
     }
+
+    const updateShares = (v) => {
+
+    }
+
+
 
     // ==============================================================
 
@@ -246,6 +254,7 @@ export const CustomRangeVideo = (props) => {
                     </div>
                     <div className='icon' style={{ display: "flex", flexDirection: "column", alignItems: "center", color: "white", cursor: "pointer" }} onClick={(e) => {
                         e.stopPropagation();
+                        setShowShares(true);
                         // setReload(ps => !ps);
                     }}>
                         <svg aria-label="Share Post" className={"svg "} color="#fff" fill="#fff" height="24" role="img" viewBox="0 0 24 24" width="24">
@@ -282,6 +291,13 @@ export const CustomRangeVideo = (props) => {
                 <DrawerPopup size={DrawerPopupSize.Default} position={DrawerPopupPosition.Right} isopen={showcomments} className="sample"
                     content={<ViewComments row={props.row} update={(p) => update(p)} comments={comments} onClose={(s) => setShowComments(false)} />}
                     OuterClick={() => setShowComments(false)}
+                />
+            }
+
+            {showshares &&
+                <DrawerPopup size={DrawerPopupSize.Default} position={DrawerPopupPosition.Right} isopen={showshares} className="sample"
+                    content={<Shares row={props.row} update={(p) => updateShares(p)} type={"reels"} onClose={(s) => setShowShares(false)} />}
+                    OuterClick={() => setShowShares(false)}
                 />
             }
         </React.Fragment>
