@@ -10,7 +10,7 @@ export const ApplicationPage = (props) => {
 
     const params = useParams();
     const location = useLocation();
-
+    const [menu, setMenu] = useState(false);
     const navigator = useNavigate();
     const [selected, setSelected] = useState(Components[0]);
     const [mydetails, setMyDetails] = useState({});
@@ -146,8 +146,9 @@ export const ApplicationPage = (props) => {
 
     return (
         <div className='application-page'>
+            
 
-            <LeftMenu onSelected={(row) => onSelected(row)} selected={selectleftmenu} />
+            <LeftMenu active={menu} onSelected={(row) => onSelected(row)} selected={selectleftmenu} />
             <Content selected={selected} />
         </div>
     )

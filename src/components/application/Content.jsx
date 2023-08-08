@@ -23,7 +23,7 @@ export const Content = props => {
     // ==============================================================
 
     useEffect(() => {
-        const newstocket = io('http://localhost:2001')
+        const newstocket = io(process.env.REACT_APP_STOCKET_URL);
         setSocket(newstocket);
         return () => {
             newstocket.disconnect();

@@ -4,16 +4,16 @@ import { getStorage } from "firebase/storage";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAvDJNhcHFu045VYVAnFTjmBNkmaDSMWpU",
-  authDomain: "mern-stack-ef0e9.firebaseapp.com",
-  projectId: "mern-stack-ef0e9",
-  storageBucket: "mern-stack-ef0e9.appspot.com",
-  messagingSenderId: "611652026877",
-  appId: "1:611652026877:web:d25871dccd390b98c15994",
-  BucketUrl: "gs://mern-stack-ef0e9.appspot.com",
+  apiKey: process.env.REACT_APP_APIKEY,
+  authDomain: process.env.REACT_APP_AUTHDOMAIN,
+  projectId: process.env.REACT_APP_PROJECTID,
+  storageBucket: process.env.REACT_APP_STORAGEBUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGINGSENDERID,
+  appId: process.env.REACT_APP_APPID,
+  BucketUrl: process.env.REACT_APP_BUCKETURL,
 };
 
-console.log("firebaseConfig", firebaseConfig);
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -26,7 +26,7 @@ export const provider = new GoogleAuthProvider();
 const messaging = getMessaging(app);
 
 // Storage
-export const Storage = getStorage(app, process.env.BucketUrl);
+export const Storage = getStorage(app, process.env.REACT_APP_BUCKETURL);
 
 
 
@@ -39,7 +39,7 @@ export const getTokenFromFirebase = async () => {
 
   let currentToken = '';
   try {
-    currentToken = await getToken(messaging, { vapidKey: "BI5jjT3X4q2l1tgWAY1D9oi7pfbX2lFAyT7r7Bxup4nBz37eG1kw6MVozb3-oguRYTUcvnE7-NWkqjQE-SQqAx8" });
+    currentToken = await getToken(messaging, { vapidKey: process.env.REACT_APP_VAPIDKEY });
     console.log("currentToken", currentToken);
     if (currentToken) {
     } else {
